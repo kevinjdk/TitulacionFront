@@ -1,0 +1,82 @@
+<div class="login-container">
+  <p-card styleClass="login-card">
+    <div class="flex flex-column align-items-center">
+      <img
+        src="assets/images/logoReECetas.png"
+        alt="Logo ReECetas"
+        class="login-logo"
+        width="160"
+        height="80"
+        loading="eager"
+      />
+
+      <h2 class="login-title">LOGIN</h2>
+
+      <form
+        [formGroup]="loginForm"
+        (ngSubmit)="onLogin()"
+        class="w-full login-form"
+      >
+        <div class="field">
+          <label for="username">Usuario</label>
+          <input
+            pInputText
+            id="username"
+            type="text"
+            formControlName="username"
+            autocomplete="username"
+            class="w-full"
+            placeholder="Ingrese su usuario"
+          />
+          <small
+            *ngIf="
+              loginForm.get('username')?.invalid &&
+              loginForm.get('username')?.touched
+            "
+            class="p-error"
+            >Email es requerido.</small
+          >
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <p-password
+            id="password"
+            formControlName="password"
+            [toggleMask]="true"
+            [feedback]="false"
+            autocomplete="current-password"
+            styleClass="w-full"
+            placeholder="••••••••"
+          ></p-password>
+          <small
+            *ngIf="
+              loginForm.get('password')?.invalid &&
+              loginForm.get('password')?.touched
+            "
+            class="p-error"
+            >Contraseña es requerida.</small
+          >
+        </div>
+
+        <div class="flex justify-content-start mb-3">
+          <a href="#" class="forgot-password-link">¿Olvidaste la contraseña?</a>
+        </div>
+
+        <div class="flex justify-content-center w-full">
+          <p-button
+            label="Login"
+            type="submit"
+            [loading]="loading"
+            [disabled]="loginForm.invalid"
+            styleClass="login-button"
+          ></p-button>
+        </div>
+
+        <p *ngIf="errorMessage" class="p-error mt-3 text-center">
+          {{ errorMessage }}
+        </p>
+      </form>
+    </div>
+  </p-card>
+</div>
