@@ -1,0 +1,238 @@
+<div class="p-grid p-justify-center">
+  <div class="p-col-12 p-lg-10">
+    <p-card [header]="isEditMode ? 'Editar Plato' : 'Nuevo Plato'">
+      <form [formGroup]="platoForm" (ngSubmit)="onSubmit()">
+        <div class="p-fluid">
+          <div class="p-grid">
+            <!-- Nombre -->
+            <div class="p-col-12 p-md-6">
+              <div class="p-field p-mb-4">
+                <label for="nombre">Nombre del Plato *</label>
+                <input
+                  id="nombre"
+                  type="text"
+                  pInputText
+                  formControlName="nombre"
+                  placeholder="Ingrese el nombre del plato"
+                  [class.ng-invalid]="isFieldInvalid('nombre')"
+                />
+                <small class="p-error" *ngIf="isFieldInvalid('nombre')">
+                  {{ getFieldError("nombre") }}
+                </small>
+              </div>
+            </div>
+
+            <!-- Porciones -->
+            <div class="p-col-12 p-md-6">
+              <div class="p-field p-mb-4">
+                <label for="porciones">Porciones *</label>
+                <p-inputNumber
+                  id="porciones"
+                  formControlName="porciones"
+                  [min]="1"
+                  [max]="20"
+                  [showButtons]="true"
+                  buttonLayout="horizontal"
+                  placeholder="Número de porciones"
+                  [class.ng-invalid]="isFieldInvalid('porciones')"
+                ></p-inputNumber>
+                <small class="p-error" *ngIf="isFieldInvalid('porciones')">
+                  {{ getFieldError("porciones") }}
+                </small>
+              </div>
+            </div>
+
+            <!-- Categoría -->
+            <div class="p-col-12 p-md-4">
+              <div class="p-field p-mb-4">
+                <label for="categoria">Categoría *</label>
+                <p-dropdown
+                  id="categoria"
+                  formControlName="categoriaId"
+                  [options]="categorias"
+                  optionLabel="nombre"
+                  optionValue="id"
+                  placeholder="Seleccione una categoría"
+                  [class.ng-invalid]="isFieldInvalid('categoriaId')"
+                ></p-dropdown>
+                <small class="p-error" *ngIf="isFieldInvalid('categoriaId')">
+                  {{ getFieldError("categoriaId") }}
+                </small>
+              </div>
+            </div>
+
+            <!-- Región -->
+            <div class="p-col-12 p-md-4">
+              <div class="p-field p-mb-4">
+                <label for="region">Región *</label>
+                <p-dropdown
+                  id="region"
+                  formControlName="regionId"
+                  [options]="regiones"
+                  optionLabel="nombre"
+                  optionValue="id"
+                  placeholder="Seleccione una región"
+                  [class.ng-invalid]="isFieldInvalid('regionId')"
+                ></p-dropdown>
+                <small class="p-error" *ngIf="isFieldInvalid('regionId')">
+                  {{ getFieldError("regionId") }}
+                </small>
+              </div>
+            </div>
+
+            <!-- Provincia -->
+            <div class="p-col-12 p-md-4">
+              <div class="p-field p-mb-4">
+                <label for="provincia">Provincia *</label>
+                <p-dropdown
+                  id="provincia"
+                  formControlName="provinciaId"
+                  [options]="provinciasFiltradas"
+                  optionLabel="nombre"
+                  optionValue="id"
+                  placeholder="Seleccione una provincia"
+                  [disabled]="!platoForm.get('regionId')?.value"
+                  [class.ng-invalid]="isFieldInvalid('provinciaId')"
+                ></p-dropdown>
+                <small class="p-error" *ngIf="isFieldInvalid('provinciaId')">
+                  {{ getFieldError("provinciaId") }}
+                </small>
+              </div>
+            </div>
+
+            <!-- URL de Imagen -->
+            <div class="p-col-12">
+              <div class="p-field p-mb-4">
+                <label for="imageUrl">URL de Imagen (opcional)</label>
+                <input
+                  id="imageUrl"
+                  type="url"
+                  pInputText
+                  formControlName="imageUrl"
+                  placeholder="https://ejemplo.com/imagen.jpg"
+                />
+              </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="p-col-12">
+              <div class="p-field p-mb-4">
+                <label for="descripcion">Descripción *</label>
+                <textarea
+                  id="descripcion"
+                  pInputTextarea
+                  formControlName="descripcion"
+                  placeholder="Describe el plato típico ecuatoriano"
+                  rows="4"
+                  [class.ng-invalid]="isFieldInvalid('descripcion')"
+                ></textarea>
+                <small class="p-error" *ngIf="isFieldInvalid('descripcion')">
+                  {{ getFieldError("descripcion") }}
+                </small>
+              </div>
+            </div>
+
+            <!-- Ingredientes -->
+            <div class="p-col-12">
+              <div class="p-field p-mb-4">
+                <label for="ingredientes">Ingredientes *</label>
+                <textarea
+                  id="ingredientes"
+                  pInputTextarea
+                  formControlName="ingredientes"
+                  placeholder="Lista los ingredientes necesarios para preparar el plato"
+                  rows="4"
+                  [class.ng-invalid]="isFieldInvalid('ingredientes')"
+                ></textarea>
+                <small class="p-error" *ngIf="isFieldInvalid('ingredientes')">
+                  {{ getFieldError("ingredientes") }}
+                </small>
+              </div>
+            </div>
+
+            <!-- Preparación -->
+            <div class="p-col-12">
+              <div class="p-field p-mb-4">
+                <label>Pasos de Preparación *</label>
+                <div formArrayName="preparacion">
+                  <div
+                    *ngFor="
+                      let paso of preparacionArray.controls;
+                      let i = index
+                    "
+                    class="p-mb-3"
+                  >
+                    <div class="p-inputgroup">
+                      <span class="p-inputgroup-addon">{{ i + 1 }}</span>
+                      <textarea
+                        [formControlName]="i"
+                        pInputTextarea
+                        [placeholder]="'Paso ' + (i + 1) + ' de la preparación'"
+                        rows="2"
+                        [class.ng-invalid]="
+                          preparacionArray.controls[i].invalid &&
+                          preparacionArray.controls[i].touched
+                        "
+                      ></textarea>
+                      <button
+                        type="button"
+                        class="p-inputgroup-addon"
+                        *ngIf="preparacionArray.length > 1"
+                        (click)="removePreparacionStep(i)"
+                        style="background: #f44336; color: white; border: none"
+                      >
+                        <i class="pi pi-times"></i>
+                      </button>
+                    </div>
+                    <small
+                      class="p-error"
+                      *ngIf="
+                        preparacionArray.controls[i].invalid &&
+                        preparacionArray.controls[i].touched
+                      "
+                    >
+                      Este paso es requerido
+                    </small>
+                  </div>
+                </div>
+                <p-button
+                  type="button"
+                  icon="pi pi-plus"
+                  label="Agregar Paso"
+                  severity="secondary"
+                  size="small"
+                  (click)="addPreparacionStep()"
+                ></p-button>
+              </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="p-col-12">
+              <div class="p-field p-text-center">
+                <p-button
+                  type="button"
+                  icon="pi pi-arrow-left"
+                  label="Cancelar"
+                  severity="secondary"
+                  (click)="navigateBack()"
+                  class="p-mr-2"
+                  [disabled]="loading"
+                ></p-button>
+                <p-button
+                  type="submit"
+                  [icon]="isEditMode ? 'pi pi-check' : 'pi pi-plus'"
+                  [label]="isEditMode ? 'Actualizar' : 'Crear'"
+                  [disabled]="loading"
+                  [loading]="loading"
+                ></p-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </p-card>
+  </div>
+</div>
+
+<!-- Toast Messages -->
+<p-toast></p-toast>

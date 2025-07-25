@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -6,10 +6,12 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-// PrimeNG Modules
+// PrimeNG Modules y Configuración
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
+import { providePrimeNG } from 'primeng/config';
+import Lara from '@primeng/themes/lara';
 
 // Arquitectura Hexagonal - Importar puertos y adaptadores
 import { AuthGateway } from './core/domain/ports/auth.gateway';
@@ -30,6 +32,14 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
     InputTextModule,
   ],
   providers: [
+    providePrimeNG({
+      theme: {
+        preset: Lara,
+        options: {
+          darkModeSelector: '.dark',
+        },
+      },
+    }),
     { provide: AuthGateway, useClass: AuthRestAdapter },
     {
       provide: HTTP_INTERCEPTORS,

@@ -1,4 +1,4 @@
-<div class="dashboard-container">
+<div class="admin-layout-container">
   <!-- Header -->
   <div class="header">
     <div class="logo">
@@ -36,23 +36,43 @@
     <div class="sidebar">
       <nav>
         <ul class="nav-menu">
-          <li class="nav-item active">
+          <li
+            class="nav-item"
+            [class.active]="isActive('dashboard')"
+            (click)="router.navigate(['/admin/dashboard'])"
+          >
             <i class="pi pi-home"></i>
             INICIO
           </li>
-          <li class="nav-item" (click)="router.navigate(['/admin/regiones'])">
+          <li
+            class="nav-item"
+            [class.active]="isActive('regiones')"
+            (click)="router.navigate(['/admin/regiones'])"
+          >
             <i class="pi pi-map"></i>
             REGIÓN
           </li>
-          <li class="nav-item" (click)="router.navigate(['/admin/provincias'])">
+          <li
+            class="nav-item"
+            [class.active]="isActive('provincias')"
+            (click)="router.navigate(['/admin/provincias'])"
+          >
             <i class="pi pi-globe"></i>
             PROVINCIA
           </li>
-          <li class="nav-item" (click)="router.navigate(['/admin/categorias'])">
+          <li
+            class="nav-item"
+            [class.active]="isActive('categorias')"
+            (click)="router.navigate(['/admin/categorias'])"
+          >
             <i class="pi pi-tags"></i>
             CATEGORÍA
           </li>
-          <li class="nav-item" (click)="router.navigate(['/admin/platos'])">
+          <li
+            class="nav-item"
+            [class.active]="isActive('platos')"
+            (click)="router.navigate(['/admin/platos'])"
+          >
             <i class="pi pi-shopping-cart"></i>
             PLATOS
           </li>
@@ -62,50 +82,14 @@
 
     <!-- Main Content -->
     <div class="main-content">
-      <div class="welcome-section">
-        <h1>BIENVENIDO USER</h1>
-        <p class="subtitle">Dashboard</p>
+      <div class="page-header" *ngIf="pageTitle">
+        <h1>{{ pageTitle }}</h1>
+        <p class="subtitle">Crud</p>
       </div>
 
-      <!-- Statistics Cards -->
-      <div class="stats-grid" *ngIf="!loading">
-        <div
-          class="stat-card regiones"
-          (click)="router.navigate(['/admin/regiones'])"
-        >
-          <h3>REGIONES</h3>
-          <div class="count">{{ regionesCount }}</div>
-        </div>
-
-        <div
-          class="stat-card provincias"
-          (click)="router.navigate(['/admin/provincias'])"
-        >
-          <h3>PROVINCIAS</h3>
-          <div class="count">{{ provinciasCount }}</div>
-        </div>
-
-        <div
-          class="stat-card categorias"
-          (click)="router.navigate(['/admin/categorias'])"
-        >
-          <h3>CATEGORÍAS</h3>
-          <div class="count">{{ categoriasCount }}</div>
-        </div>
-
-        <div
-          class="stat-card platos"
-          (click)="router.navigate(['/admin/platos'])"
-        >
-          <h3>PLATOS</h3>
-          <div class="count">{{ platosCount }}</div>
-        </div>
-      </div>
-
-      <!-- Loading indicator -->
-      <div class="loading-container" *ngIf="loading">
-        <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
-        <p>Cargando estadísticas...</p>
+      <!-- Content Projection -->
+      <div class="content-area">
+        <ng-content></ng-content>
       </div>
 
       <!-- Footer -->
