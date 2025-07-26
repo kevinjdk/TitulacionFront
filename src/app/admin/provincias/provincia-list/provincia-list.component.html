@@ -1,83 +1,209 @@
-<div class="p-grid p-justify-center">
-  <div class="p-col-12">
-    <p-card header="Gestión de Provincias">
-      <!-- Toolbar -->
-      <p-toolbar>
-        <ng-template pTemplate="left">
-          <p-button
-            icon="pi pi-arrow-left"
-            label="Volver"
-            severity="secondary"
-            (click)="navigateBack()"
-            class="p-mr-2"
-          ></p-button>
-          <p-button
-            icon="pi pi-plus"
-            label="Nueva Provincia"
-            (click)="navigateToNew()"
-          ></p-button>
-        </ng-template>
-      </p-toolbar>
+<app-admin-layout pageTitle="PROVINCIAS" currentRoute="provincias">
+  <!-- Toolbar -->
+  <p-toolbar styleClass="mb-3">
+    <ng-template pTemplate="left">
+      <p-button
+        icon="pi pi-plus"
+        label="Nuevo"
+        severity="success"
+        (click)="navigateToNew()"
+        class="mr-2"
+      ></p-button>
+    </ng-template>
+  </p-toolbar>
 
-      <!-- Table -->
-      <p-table
-        [value]="provincias"
-        [loading]="loading"
-        [paginator]="true"
-        [rows]="15"
-        [showCurrentPageReport]="true"
-        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} provincias"
-        [rowsPerPageOptions]="[15, 25, 50]"
-        styleClass="p-datatable-gridlines"
-      >
-        <ng-template pTemplate="header">
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Región</th>
-            <th>Acciones</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-provincia>
-          <tr>
-            <td>{{ provincia.id }}</td>
-            <td>{{ provincia.nombre }}</td>
-            <td>
-              <span *ngIf="provincia.region">
-                {{ provincia.region.nombre }}
-              </span>
-              <span *ngIf="!provincia.region"> Sin región asignada </span>
-            </td>
-            <td>
-              <p-button
-                icon="pi pi-pencil"
-                label="Editar"
-                severity="info"
-                size="small"
-                (click)="editProvincia(provincia)"
-                class="p-mr-2"
-              ></p-button>
-              <p-button
-                icon="pi pi-trash"
-                label="Eliminar"
-                severity="danger"
-                size="small"
-                (click)="confirmDelete(provincia)"
-              ></p-button>
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="4" class="p-text-center">
-              No se encontraron provincias
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </p-card>
+  <!-- Search -->
+  <div class="mb-3">
+    <span class="p-input-icon-left">
+      <i class="pi pi-search"></i>
+      <input 
+        type="text" 
+        pInputText 
+        placeholder="Buscar provincia..." 
+        class="w-full"
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+      />
+    </span>
   </div>
-</div>
+
+  <!-- Table -->
+  <p-table
+    [value]="filteredProvincias"
+    [loading]="loading"
+    [paginator]="true"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    dataKey="id"
+    styleClass="p-datatable-gridlines"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="id">
+          ID
+          <p-sortIcon field="id"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nombre">
+          Nombre
+          <p-sortIcon field="nombre"></p-sortIcon>
+        </th>
+        <th pSortableColumn="region.nombre">
+          Región
+          <p-sortIcon field="region.nombre"></p-sortIcon>
+        </th>
+        <th>Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-provincia>
+      <tr>
+        <td>{{ provincia.id }}</td>
+        <td>{{ provincia.nombre }}</td>
+        <td>
+          <span *ngIf="provincia.region">
+            {{ provincia.region.nombre }}
+          </span>
+          <span *ngIf="!provincia.region">
+            Sin región asignada
+          </span>
+        </td>
+        <td>
+          <p-button
+            icon="pi pi-pencil"
+            severity="info"
+            size="small"
+            (click)="editProvincia(provincia)"
+            class="mr-2"
+            pTooltip="Editar"
+          ></p-button>
+          <p-button
+            icon="pi pi-trash"
+            severity="danger"
+            size="small"
+            (click)="confirmDelete(provincia)"
+            pTooltip="Eliminar"
+          ></p-button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4" class="text-center">No se encontraron provincias</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</app-admin-layout>
+
+<!-- Modal de Creación -->
+<p-dialog
+  header="Nueva Provincia"
+  [(visible)]="showCreateDialog"
+  [modal]="true"
+  [style]="{ width: '450px' }"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="p-fluid">
+    <div class="p-field">
+      <label for="newProvinciaNombre">Nombre de la Provincia</label>
+      <input
+        id="newProvinciaNombre"
+        type="text"
+        pInputText
+        [(ngModel)]="newProvincia.nombre"
+        placeholder="Ingrese el nombre de la provincia"
+        class="mt-2"
+      />
+    </div>
+    <div class="p-field">
+      <label for="newProvinciaRegion">Región</label>
+      <p-dropdown
+        id="newProvinciaRegion"
+        [options]="regiones"
+        [(ngModel)]="newProvincia.regionId"
+        optionLabel="nombre"
+        optionValue="id"
+        placeholder="Seleccione una región"
+        class="mt-2"
+      ></p-dropdown>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-content-end gap-2">
+      <p-button
+        icon="pi pi-times"
+        label="Cancelar"
+        severity="secondary"
+        (click)="hideCreateDialog()"
+        [outlined]="true"
+      ></p-button>
+      <p-button
+        icon="pi pi-check"
+        label="Crear"
+        severity="success"
+        (click)="createProvincia()"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Modal de Edición -->
+<p-dialog
+  header="Actualizar Provincia"
+  [(visible)]="showEditDialog"
+  [modal]="true"
+  [style]="{ width: '450px' }"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="p-fluid">
+    <div class="p-field">
+      <label for="provinciaNombre">Nombre de la Provincia</label>
+      <input
+        id="provinciaNombre"
+        type="text"
+        pInputText
+        [(ngModel)]="selectedProvincia.nombre"
+        placeholder="Ingrese el nombre de la provincia"
+        class="mt-2"
+      />
+    </div>
+    <div class="p-field">
+      <label for="provinciaRegion">Región</label>
+      <p-dropdown
+        id="provinciaRegion"
+        [options]="regiones"
+        [(ngModel)]="selectedProvincia.regionId"
+        optionLabel="nombre"
+        optionValue="id"
+        placeholder="Seleccione una región"
+        class="mt-2"
+      ></p-dropdown>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-content-end gap-2">
+      <p-button
+        icon="pi pi-times"
+        label="Cancelar"
+        severity="secondary"
+        (click)="hideEditDialog()"
+        [outlined]="true"
+      ></p-button>
+      <p-button
+        icon="pi pi-check"
+        label="Guardar"
+        severity="success"
+        (click)="saveProvincia()"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
 
 <!-- Toast Messages -->
 <p-toast></p-toast>
