@@ -159,6 +159,7 @@
       <div class="col-12">
         <div class="p-field">
           <label for="newPlatoNombre">Nombre del Plato *</label>
+          <br />
           <input
             id="newPlatoNombre"
             type="text"
@@ -166,6 +167,7 @@
             [(ngModel)]="newPlato.nombre"
             placeholder="Ingrese el nombre del plato"
             class="mt-2"
+            [style]="{ width: '50%' }"
           />
         </div>
       </div>
@@ -173,6 +175,7 @@
       <div class="col-12">
         <div class="p-field">
           <label for="newPlatoDescripcion">Descripción</label>
+          <br />
           <textarea
             id="newPlatoDescripcion"
             pInputTextarea
@@ -180,13 +183,14 @@
             placeholder="Ingrese una descripción del plato"
             [rows]="3"
             class="mt-2"
+            [style]="{ width: '100%' }"
           ></textarea>
         </div>
       </div>
 
       <div class="col-6">
         <div class="p-field">
-          <label for="newPlatoCategoria">Categoría *</label>
+          <label for="newPlatoCategoria">Categoría * </label>
           <p-dropdown
             id="newPlatoCategoria"
             [options]="categorias"
@@ -196,13 +200,15 @@
             placeholder="Seleccione una categoría"
             class="mt-2"
             appendTo="body"
+            [style]="{ width: '100%' }"
           ></p-dropdown>
         </div>
       </div>
 
       <div class="col-6">
         <div class="p-field">
-          <label for="newPlatoPorciones">Porciones *</label>
+          <label for="newPlatoPorciones">Porciones * </label>
+          <br />
           <p-inputNumber
             id="newPlatoPorciones"
             [(ngModel)]="newPlato.porciones"
@@ -210,13 +216,14 @@
             [max]="20"
             placeholder="Número de porciones"
             class="mt-2"
+            [style]="{ width: '100%' }"
           ></p-inputNumber>
         </div>
       </div>
 
       <div class="col-6">
         <div class="p-field">
-          <label for="newPlatoRegion">Región *</label>
+          <label for="newPlatoRegion">Región * </label>
           <p-dropdown
             id="newPlatoRegion"
             [options]="regiones"
@@ -227,13 +234,14 @@
             class="mt-2"
             appendTo="body"
             (ngModelChange)="onRegionChange()"
+            [style]="{ width: '100%' }"
           ></p-dropdown>
         </div>
       </div>
 
       <div class="col-6">
         <div class="p-field">
-          <label for="newPlatoProvincia">Provincia *</label>
+          <label for="newPlatoProvincia">Provincia * </label>
           <p-dropdown
             id="newPlatoProvincia"
             [options]="filteredProvincias"
@@ -244,6 +252,7 @@
             class="mt-2"
             appendTo="body"
             [disabled]="!newPlato.regionId"
+            [style]="{ width: '100%' }"
           ></p-dropdown>
         </div>
       </div>
@@ -251,6 +260,7 @@
       <div class="col-12">
         <div class="p-field">
           <label for="newPlatoIngredientes">Ingredientes</label>
+          <br />
           <textarea
             id="newPlatoIngredientes"
             pInputTextarea
@@ -258,6 +268,7 @@
             placeholder="Liste los ingredientes del plato"
             [rows]="3"
             class="mt-2"
+            [style]="{ width: '100%' }"
           ></textarea>
         </div>
       </div>
@@ -265,6 +276,7 @@
       <div class="col-12">
         <div class="p-field">
           <label for="newPlatoPreparacion">Preparación</label>
+          <br />
           <textarea
             id="newPlatoPreparacion"
             pInputTextarea
@@ -272,13 +284,14 @@
             placeholder="Describa los pasos de preparación (separados por líneas)"
             [rows]="4"
             class="mt-2"
+            [style]="{ width: '100%' }"
           ></textarea>
         </div>
       </div>
 
       <div class="col-12">
         <div class="p-field">
-          <label for="newPlatoImageUrl">URL de Imagen</label>
+          <label for="newPlatoImageUrl">URL de Imagen </label>
           <input
             id="newPlatoImageUrl"
             type="text"
@@ -286,6 +299,7 @@
             [(ngModel)]="newPlato.imageUrl"
             placeholder="Ingrese la URL de la imagen"
             class="mt-2"
+            [style]="{ width: '50%' }"
           />
         </div>
       </div>
@@ -326,6 +340,7 @@
       <div class="col-12">
         <div class="p-field">
           <label for="editPlatoNombre">Nombre del Plato *</label>
+          <br />
           <input
             id="editPlatoNombre"
             type="text"
@@ -333,6 +348,7 @@
             [(ngModel)]="editPlatoData.nombre"
             placeholder="Ingrese el nombre del plato"
             class="mt-2"
+            [style]="{ width: '50%' }"
           />
         </div>
       </div>
@@ -340,6 +356,7 @@
       <div class="col-12">
         <div class="p-field">
           <label for="editPlatoDescripcion">Descripción *</label>
+          <br />
           <textarea
             id="editPlatoDescripcion"
             pInputTextarea
@@ -347,6 +364,7 @@
             placeholder="Ingrese la descripción del plato"
             [rows]="3"
             class="mt-2"
+            [style]="{ width: '100%' }"
           ></textarea>
         </div>
       </div>
@@ -354,6 +372,7 @@
       <div class="col-12">
         <div class="p-field">
           <label for="editPlatoIngredientes">Ingredientes *</label>
+          <br />
           <textarea
             id="editPlatoIngredientes"
             pInputTextarea
@@ -361,6 +380,7 @@
             placeholder="Ingrese los ingredientes del plato"
             [rows]="4"
             class="mt-2"
+            [style]="{ width: '100%' }"
           ></textarea>
         </div>
       </div>
@@ -368,6 +388,7 @@
       <div class="col-12">
         <div class="p-field">
           <label for="editPlatoPreparacion">Preparación *</label>
+          <br />
           <textarea
             id="editPlatoPreparacion"
             pInputTextarea
@@ -375,6 +396,7 @@
             placeholder="Ingrese los pasos de preparación (uno por línea)"
             [rows]="4"
             class="mt-2"
+            [style]="{ width: '100%' }"
           ></textarea>
         </div>
       </div>
@@ -382,6 +404,7 @@
       <div class="col-6">
         <div class="p-field">
           <label for="editPlatoPorciones">Porciones *</label>
+          <br />
           <p-inputNumber
             id="editPlatoPorciones"
             [(ngModel)]="editPlatoData.porciones"
@@ -389,6 +412,7 @@
             [max]="100"
             placeholder="Número de porciones"
             class="mt-2"
+            [style]="{ width: '100%' }"
           ></p-inputNumber>
         </div>
       </div>
@@ -405,6 +429,7 @@
             placeholder="Seleccione una categoría"
             appendTo="body"
             class="mt-2"
+            [style]="{ width: '100%' }"
           ></p-dropdown>
         </div>
       </div>
@@ -422,6 +447,7 @@
             appendTo="body"
             (onChange)="onEditRegionChange()"
             class="mt-2"
+            [style]="{ width: '100%' }"
           ></p-dropdown>
         </div>
       </div>
@@ -438,13 +464,14 @@
             placeholder="Seleccione una provincia"
             appendTo="body"
             class="mt-2"
+            [style]="{ width: '100%' }"
           ></p-dropdown>
         </div>
       </div>
 
       <div class="col-12">
         <div class="p-field">
-          <label for="editPlatoImageUrl">URL de Imagen</label>
+          <label for="editPlatoImageUrl">URL de Imagen </label>
           <input
             id="editPlatoImageUrl"
             type="text"
@@ -452,6 +479,7 @@
             [(ngModel)]="editPlatoData.imageUrl"
             placeholder="Ingrese la URL de la imagen del plato"
             class="mt-2"
+            [style]="{ width: '60%' }"
           />
         </div>
       </div>
