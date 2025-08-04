@@ -71,9 +71,14 @@ export class ProvinciaListComponent implements OnInit {
     if (!this.searchTerm) {
       this.filteredProvincias = [...this.provincias];
     } else {
-      this.filteredProvincias = this.provincias.filter(provincia =>
-        provincia.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        (provincia.region?.nombre || '').toLowerCase().includes(this.searchTerm.toLowerCase())
+      this.filteredProvincias = this.provincias.filter(
+        (provincia) =>
+          provincia.nombre
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase()) ||
+          (provincia.region?.nombre || '')
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase())
       );
     }
   }
@@ -89,7 +94,10 @@ export class ProvinciaListComponent implements OnInit {
   }
 
   saveProvincia(): void {
-    if (this.selectedProvincia.nombre.trim() && this.selectedProvincia.regionId) {
+    if (
+      this.selectedProvincia.nombre.trim() &&
+      this.selectedProvincia.regionId
+    ) {
       const updateRequest = {
         id: this.selectedProvincia.id,
         nombre: this.selectedProvincia.nombre,

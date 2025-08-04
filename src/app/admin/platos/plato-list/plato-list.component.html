@@ -1,132 +1,480 @@
-<div class="p-grid p-justify-center">
-  <div class="p-col-12">
-    <p-card header="Gestión de Platos">
-      <!-- Toolbar -->
-      <p-toolbar>
-        <ng-template pTemplate="left">
-          <p-button
-            icon="pi pi-arrow-left"
-            label="Volver"
-            severity="secondary"
-            (click)="navigateBack()"
-            class="p-mr-2"
-          ></p-button>
-          <p-button
-            icon="pi pi-plus"
-            label="Nuevo Plato"
-            (click)="navigateToNew()"
-          ></p-button>
-        </ng-template>
-        <ng-template pTemplate="right">
-          <span class="p-input-icon-left p-mr-2">
-            <i class="pi pi-search"></i>
-            <input
-              type="text"
-              pInputText
-              placeholder="Buscar platos..."
-              [(ngModel)]="searchTerm"
-              (keyup.enter)="searchPlatos()"
-            />
-          </span>
-          <p-button
-            icon="pi pi-search"
-            label="Buscar"
-            (click)="searchPlatos()"
-            class="p-mr-2"
-          ></p-button>
-          <p-button
-            icon="pi pi-refresh"
-            label="Limpiar"
-            severity="secondary"
-            (click)="clearSearch()"
-          ></p-button>
-        </ng-template>
-      </p-toolbar>
+<app-admin-layout pageTitle="PLATOS" currentRoute="platos">
+  <!-- Toolbar -->
+  <p-toolbar styleClass="mb-3">
+    <ng-template pTemplate="left">
+      <p-button
+        icon="pi pi-plus"
+        label="Nuevo"
+        severity="success"
+        (click)="navigateToNew()"
+        class="mr-2"
+      ></p-button>
+    </ng-template>
+  </p-toolbar>
 
-      <!-- Table -->
-      <p-table
-        [value]="platos"
-        [loading]="loading"
-        [paginator]="true"
-        [rows]="10"
-        [showCurrentPageReport]="true"
-        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} platos"
-        [rowsPerPageOptions]="[10, 25, 50]"
-        styleClass="p-datatable-gridlines"
-      >
-        <ng-template pTemplate="header">
-          <tr>
-            <th>ID</th>
-            <th>Imagen</th>
-            <th>Nombre</th>
-            <th>Categoría</th>
-            <th>Región</th>
-            <th>Provincia</th>
-            <th>Porciones</th>
-            <th>Acciones</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-plato>
-          <tr>
-            <td>{{ plato.id }}</td>
-            <td>
-              <img
-                *ngIf="plato.imageUrl"
-                [src]="plato.imageUrl"
-                [alt]="plato.nombre"
-                width="50"
-                height="50"
-                style="border-radius: 4px; object-fit: cover"
-              />
-              <span
-                *ngIf="!plato.imageUrl"
-                class="pi pi-image"
-                style="font-size: 2rem; color: #ccc"
-              ></span>
-            </td>
-            <td>
-              <strong>{{ plato.nombre }}</strong>
-              <div style="color: #666; font-size: 0.85em; margin-top: 4px">
-                {{ plato.descripcion | slice : 0 : 80
-                }}{{ plato.descripcion.length > 80 ? "..." : "" }}
-              </div>
-            </td>
-            <td>
-              <p-tag severity="info">{{ plato.categoria.nombre }}</p-tag>
-            </td>
-            <td>
-              <p-tag severity="success">{{ plato.region.nombre }}</p-tag>
-            </td>
-            <td>{{ plato.provincia.nombre }}</td>
-            <td>{{ plato.porciones }} persona(s)</td>
-            <td>
-              <p-button
-                icon="pi pi-pencil"
-                label="Editar"
-                severity="info"
-                size="small"
-                (click)="editPlato(plato)"
-                class="p-mr-2"
-              ></p-button>
-              <p-button
-                icon="pi pi-trash"
-                label="Eliminar"
-                severity="danger"
-                size="small"
-                (click)="confirmDelete(plato)"
-              ></p-button>
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="8" class="p-text-center">No se encontraron platos</td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </p-card>
+  <!-- Search -->
+  <div class="mb-3">
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-search"></i>
+      </span>
+      <input
+        type="text"
+        pInputText
+        placeholder="Buscar plato..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+      />
+    </div>
   </div>
-</div>
+
+  <!-- Table -->
+  <p-table
+    [value]="filteredPlatos"
+    [loading]="loading"
+    [paginator]="true"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    dataKey="id"
+    styleClass="p-datatable-gridlines"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="id">
+          ID
+          <p-sortIcon field="id"></p-sortIcon>
+        </th>
+        <th>Imagen</th>
+        <th pSortableColumn="nombre">
+          Nombre
+          <p-sortIcon field="nombre"></p-sortIcon>
+        </th>
+        <th pSortableColumn="categoria.nombre">
+          Categoría
+          <p-sortIcon field="categoria.nombre"></p-sortIcon>
+        </th>
+        <th pSortableColumn="region.nombre">
+          Región
+          <p-sortIcon field="region.nombre"></p-sortIcon>
+        </th>
+        <th pSortableColumn="provincia.nombre">
+          Provincia
+          <p-sortIcon field="provincia.nombre"></p-sortIcon>
+        </th>
+        <th pSortableColumn="porciones">
+          Porciones
+          <p-sortIcon field="porciones"></p-sortIcon>
+        </th>
+        <th>Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-plato>
+      <tr>
+        <td>{{ plato.id }}</td>
+        <td>
+          <img
+            *ngIf="plato.imageUrl"
+            [src]="plato.imageUrl"
+            [alt]="plato.nombre"
+            width="50"
+            height="50"
+            style="border-radius: 4px; object-fit: cover"
+          />
+          <span
+            *ngIf="!plato.imageUrl"
+            class="pi pi-image"
+            style="font-size: 2rem; color: #ccc"
+          ></span>
+        </td>
+        <td>
+          <strong>{{ plato.nombre }}</strong>
+          <div
+            style="color: #666; font-size: 0.85em; margin-top: 4px"
+            *ngIf="plato.descripcion"
+          >
+            {{ plato.descripcion | slice : 0 : 50
+            }}{{ plato.descripcion.length > 50 ? "..." : "" }}
+          </div>
+        </td>
+        <td>
+          <span *ngIf="plato.categoria">
+            {{ plato.categoria.nombre }}
+          </span>
+          <span *ngIf="!plato.categoria">Sin categoría</span>
+        </td>
+        <td>
+          <span *ngIf="plato.region">
+            {{ plato.region.nombre }}
+          </span>
+          <span *ngIf="!plato.region">Sin región</span>
+        </td>
+        <td>
+          <span *ngIf="plato.provincia">
+            {{ plato.provincia.nombre }}
+          </span>
+          <span *ngIf="!plato.provincia">Sin provincia</span>
+        </td>
+        <td>{{ plato.porciones }} persona(s)</td>
+        <td>
+          <p-button
+            icon="pi pi-pencil"
+            severity="info"
+            size="small"
+            (click)="editPlato(plato)"
+            class="mr-2"
+            pTooltip="Editar"
+          ></p-button>
+          <p-button
+            icon="pi pi-trash"
+            severity="danger"
+            size="small"
+            (click)="confirmDelete(plato)"
+            pTooltip="Eliminar"
+          ></p-button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8" class="text-center">No se encontraron platos</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</app-admin-layout>
+
+<!-- Modal de Creación -->
+<p-dialog
+  header="Nuevo Plato"
+  [(visible)]="showCreateDialog"
+  [modal]="true"
+  [style]="{ width: '700px', minHeight: '600px' }"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="p-fluid">
+    <div class="grid">
+      <div class="col-12">
+        <div class="p-field">
+          <label for="newPlatoNombre">Nombre del Plato *</label>
+          <input
+            id="newPlatoNombre"
+            type="text"
+            pInputText
+            [(ngModel)]="newPlato.nombre"
+            placeholder="Ingrese el nombre del plato"
+            class="mt-2"
+          />
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="p-field">
+          <label for="newPlatoDescripcion">Descripción</label>
+          <textarea
+            id="newPlatoDescripcion"
+            pInputTextarea
+            [(ngModel)]="newPlato.descripcion"
+            placeholder="Ingrese una descripción del plato"
+            [rows]="3"
+            class="mt-2"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="p-field">
+          <label for="newPlatoCategoria">Categoría *</label>
+          <p-dropdown
+            id="newPlatoCategoria"
+            [options]="categorias"
+            [(ngModel)]="newPlato.categoriaId"
+            optionLabel="nombre"
+            optionValue="id"
+            placeholder="Seleccione una categoría"
+            class="mt-2"
+            appendTo="body"
+          ></p-dropdown>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="p-field">
+          <label for="newPlatoPorciones">Porciones *</label>
+          <p-inputNumber
+            id="newPlatoPorciones"
+            [(ngModel)]="newPlato.porciones"
+            [min]="1"
+            [max]="20"
+            placeholder="Número de porciones"
+            class="mt-2"
+          ></p-inputNumber>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="p-field">
+          <label for="newPlatoRegion">Región *</label>
+          <p-dropdown
+            id="newPlatoRegion"
+            [options]="regiones"
+            [(ngModel)]="newPlato.regionId"
+            optionLabel="nombre"
+            optionValue="id"
+            placeholder="Seleccione una región"
+            class="mt-2"
+            appendTo="body"
+            (ngModelChange)="onRegionChange()"
+          ></p-dropdown>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="p-field">
+          <label for="newPlatoProvincia">Provincia *</label>
+          <p-dropdown
+            id="newPlatoProvincia"
+            [options]="filteredProvincias"
+            [(ngModel)]="newPlato.provinciaId"
+            optionLabel="nombre"
+            optionValue="id"
+            placeholder="Seleccione una provincia"
+            class="mt-2"
+            appendTo="body"
+            [disabled]="!newPlato.regionId"
+          ></p-dropdown>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="p-field">
+          <label for="newPlatoIngredientes">Ingredientes</label>
+          <textarea
+            id="newPlatoIngredientes"
+            pInputTextarea
+            [(ngModel)]="newPlato.ingredientes"
+            placeholder="Liste los ingredientes del plato"
+            [rows]="3"
+            class="mt-2"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="p-field">
+          <label for="newPlatoPreparacion">Preparación</label>
+          <textarea
+            id="newPlatoPreparacion"
+            pInputTextarea
+            [(ngModel)]="preparacionText"
+            placeholder="Describa los pasos de preparación (separados por líneas)"
+            [rows]="4"
+            class="mt-2"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="p-field">
+          <label for="newPlatoImageUrl">URL de Imagen</label>
+          <input
+            id="newPlatoImageUrl"
+            type="text"
+            pInputText
+            [(ngModel)]="newPlato.imageUrl"
+            placeholder="Ingrese la URL de la imagen"
+            class="mt-2"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-content-end gap-2">
+      <p-button
+        icon="pi pi-times"
+        label="Cancelar"
+        severity="secondary"
+        (click)="hideCreateDialog()"
+        [outlined]="true"
+      ></p-button>
+      <p-button
+        icon="pi pi-check"
+        label="Crear"
+        severity="success"
+        (click)="createPlato()"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Modal de Edición -->
+<p-dialog
+  header="Editar Plato"
+  [(visible)]="showEditDialog"
+  [modal]="true"
+  [style]="{ width: '700px', minHeight: '600px' }"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="p-fluid">
+    <div class="grid">
+      <div class="col-12">
+        <div class="p-field">
+          <label for="editPlatoNombre">Nombre del Plato *</label>
+          <input
+            id="editPlatoNombre"
+            type="text"
+            pInputText
+            [(ngModel)]="editPlatoData.nombre"
+            placeholder="Ingrese el nombre del plato"
+            class="mt-2"
+          />
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="p-field">
+          <label for="editPlatoDescripcion">Descripción *</label>
+          <textarea
+            id="editPlatoDescripcion"
+            pInputTextarea
+            [(ngModel)]="editPlatoData.descripcion"
+            placeholder="Ingrese la descripción del plato"
+            [rows]="3"
+            class="mt-2"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="p-field">
+          <label for="editPlatoIngredientes">Ingredientes *</label>
+          <textarea
+            id="editPlatoIngredientes"
+            pInputTextarea
+            [(ngModel)]="editPlatoData.ingredientes"
+            placeholder="Ingrese los ingredientes del plato"
+            [rows]="4"
+            class="mt-2"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="p-field">
+          <label for="editPlatoPreparacion">Preparación *</label>
+          <textarea
+            id="editPlatoPreparacion"
+            pInputTextarea
+            [(ngModel)]="editPreparacionText"
+            placeholder="Ingrese los pasos de preparación (uno por línea)"
+            [rows]="4"
+            class="mt-2"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="p-field">
+          <label for="editPlatoPorciones">Porciones *</label>
+          <p-inputNumber
+            id="editPlatoPorciones"
+            [(ngModel)]="editPlatoData.porciones"
+            [min]="1"
+            [max]="100"
+            placeholder="Número de porciones"
+            class="mt-2"
+          ></p-inputNumber>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="p-field">
+          <label for="editPlatoCategoria">Categoría *</label>
+          <p-dropdown
+            id="editPlatoCategoria"
+            [(ngModel)]="editPlatoData.categoriaId"
+            [options]="categorias"
+            optionLabel="nombre"
+            optionValue="id"
+            placeholder="Seleccione una categoría"
+            appendTo="body"
+            class="mt-2"
+          ></p-dropdown>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="p-field">
+          <label for="editPlatoRegion">Región *</label>
+          <p-dropdown
+            id="editPlatoRegion"
+            [(ngModel)]="editPlatoData.regionId"
+            [options]="regiones"
+            optionLabel="nombre"
+            optionValue="id"
+            placeholder="Seleccione una región"
+            appendTo="body"
+            (onChange)="onEditRegionChange()"
+            class="mt-2"
+          ></p-dropdown>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="p-field">
+          <label for="editPlatoProvincia">Provincia *</label>
+          <p-dropdown
+            id="editPlatoProvincia"
+            [(ngModel)]="editPlatoData.provinciaId"
+            [options]="filteredProvinciasEdit"
+            optionLabel="nombre"
+            optionValue="id"
+            placeholder="Seleccione una provincia"
+            appendTo="body"
+            class="mt-2"
+          ></p-dropdown>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="p-field">
+          <label for="editPlatoImageUrl">URL de Imagen</label>
+          <input
+            id="editPlatoImageUrl"
+            type="text"
+            pInputText
+            [(ngModel)]="editPlatoData.imageUrl"
+            placeholder="Ingrese la URL de la imagen del plato"
+            class="mt-2"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-content-end gap-2">
+      <p-button
+        icon="pi pi-times"
+        label="Cancelar"
+        severity="secondary"
+        (click)="hideEditDialog()"
+      ></p-button>
+      <p-button
+        icon="pi pi-check"
+        label="Actualizar"
+        severity="success"
+        (click)="updatePlato()"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
 
 <!-- Toast Messages -->
 <p-toast></p-toast>

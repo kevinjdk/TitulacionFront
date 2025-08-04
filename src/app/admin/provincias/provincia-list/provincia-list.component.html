@@ -14,17 +14,18 @@
 
   <!-- Search -->
   <div class="mb-3">
-    <span class="p-input-icon-left">
-      <i class="pi pi-search"></i>
-      <input 
-        type="text" 
-        pInputText 
-        placeholder="Buscar provincia..." 
-        class="w-full"
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-search"></i>
+      </span>
+      <input
+        type="text"
+        pInputText
+        placeholder="Buscar provincia..."
         [(ngModel)]="searchTerm"
         (input)="onSearch()"
       />
-    </span>
+    </div>
   </div>
 
   <!-- Table -->
@@ -64,9 +65,7 @@
           <span *ngIf="provincia.region">
             {{ provincia.region.nombre }}
           </span>
-          <span *ngIf="!provincia.region">
-            Sin región asignada
-          </span>
+          <span *ngIf="!provincia.region"> Sin región asignada </span>
         </td>
         <td>
           <p-button
@@ -107,18 +106,22 @@
 >
   <div class="p-fluid">
     <div class="p-field">
-      <label for="newProvinciaNombre">Nombre de la Provincia</label>
+      <label for="newProvinciaNombre">Nombre de la Provincia:</label>
+      <br />
       <input
         id="newProvinciaNombre"
         type="text"
         pInputText
         [(ngModel)]="newProvincia.nombre"
         placeholder="Ingrese el nombre de la provincia"
+        [style]="{ width: '60%' }"
         class="mt-2"
       />
     </div>
+
     <div class="p-field">
-      <label for="newProvinciaRegion">Región</label>
+      <label for="newProvinciaRegion">Región:</label>
+      <br />
       <p-dropdown
         id="newProvinciaRegion"
         [options]="regiones"
@@ -127,6 +130,9 @@
         optionValue="id"
         placeholder="Seleccione una región"
         class="mt-2"
+        [style]="{ width: '60%' }"
+        appendTo="body"
+        [scrollHeight]="'200px'"
       ></p-dropdown>
     </div>
   </div>
@@ -162,7 +168,8 @@
 >
   <div class="p-fluid">
     <div class="p-field">
-      <label for="provinciaNombre">Nombre de la Provincia</label>
+      <label for="provinciaNombre">Nombre de la Provincia:</label>
+      <br />
       <input
         id="provinciaNombre"
         type="text"
@@ -170,10 +177,12 @@
         [(ngModel)]="selectedProvincia.nombre"
         placeholder="Ingrese el nombre de la provincia"
         class="mt-2"
+        [style]="{ width: '60%' }"
       />
     </div>
     <div class="p-field">
-      <label for="provinciaRegion">Región</label>
+      <label for="provinciaRegion">Región:</label>
+      <br />
       <p-dropdown
         id="provinciaRegion"
         [options]="regiones"
@@ -182,6 +191,9 @@
         optionValue="id"
         placeholder="Seleccione una región"
         class="mt-2"
+        [style]="{ width: '60%' }"
+        appendTo="body"
+        [scrollHeight]="'200px'"
       ></p-dropdown>
     </div>
   </div>

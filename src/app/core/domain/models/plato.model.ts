@@ -27,15 +27,6 @@ export interface CreatePlatoRequest {
   provinciaId: number;
 }
 
-export interface UpdatePlatoRequest {
+export interface UpdatePlatoRequest extends CreatePlatoRequest {
   id: number;
-  nombre: string;
-  descripcion: string;
-  ingredientes: string;
-  preparacion: string[];
-  porciones: number;
-  imageUrl?: string;
-  categoriaId: number;
-  regionId: number;
-  provinciaId: number;
 }

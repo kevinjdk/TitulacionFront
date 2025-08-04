@@ -1,76 +1,178 @@
-<div class="p-grid p-justify-center">
-  <div class="p-col-12">
-    <p-card header="Gestión de Categorías">
-      <!-- Toolbar -->
-      <p-toolbar>
-        <ng-template pTemplate="left">
-          <p-button
-            icon="pi pi-arrow-left"
-            label="Volver"
-            severity="secondary"
-            (click)="navigateBack()"
-            class="p-mr-2"
-          ></p-button>
-          <p-button
-            icon="pi pi-plus"
-            label="Nueva Categoría"
-            (click)="navigateToNew()"
-          ></p-button>
-        </ng-template>
-      </p-toolbar>
+<app-admin-layout pageTitle="CATEGORÍAS" currentRoute="categorias">
+  <!-- Toolbar -->
+  <p-toolbar styleClass="mb-3">
+    <ng-template pTemplate="left">
+      <p-button
+        icon="pi pi-plus"
+        label="Nuevo"
+        severity="success"
+        (click)="navigateToNew()"
+        class="mr-2"
+      ></p-button>
+    </ng-template>
+  </p-toolbar>
 
-      <!-- Table -->
-      <p-table
-        [value]="categorias"
-        [loading]="loading"
-        [paginator]="true"
-        [rows]="10"
-        [showCurrentPageReport]="true"
-        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} categorías"
-        [rowsPerPageOptions]="[10, 25, 50]"
-        styleClass="p-datatable-gridlines"
-      >
-        <ng-template pTemplate="header">
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Acciones</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-categoria>
-          <tr>
-            <td>{{ categoria.id }}</td>
-            <td>{{ categoria.nombre }}</td>
-            <td>
-              <p-button
-                icon="pi pi-pencil"
-                label="Editar"
-                severity="info"
-                size="small"
-                (click)="editCategoria(categoria)"
-                class="p-mr-2"
-              ></p-button>
-              <p-button
-                icon="pi pi-trash"
-                label="Eliminar"
-                severity="danger"
-                size="small"
-                (click)="confirmDelete(categoria)"
-              ></p-button>
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="3" class="p-text-center">
-              No se encontraron categorías
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </p-card>
+  <!-- Search -->
+  <div class="mb-3">
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-search"></i>
+      </span>
+      <input
+        type="text"
+        pInputText
+        placeholder="Buscar categoría..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+      />
+    </div>
   </div>
-</div>
+
+  <!-- Table -->
+  <p-table
+    [value]="filteredCategorias"
+    [loading]="loading"
+    [paginator]="true"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    dataKey="id"
+    styleClass="p-datatable-gridlines"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="id">
+          ID
+          <p-sortIcon field="id"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nombre">
+          Nombre
+          <p-sortIcon field="nombre"></p-sortIcon>
+        </th>
+        <th>Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-categoria>
+      <tr>
+        <td>{{ categoria.id }}</td>
+        <td>{{ categoria.nombre }}</td>
+        <td>
+          <p-button
+            icon="pi pi-pencil"
+            severity="info"
+            size="small"
+            (click)="editCategoria(categoria)"
+            class="mr-2"
+            pTooltip="Editar"
+          ></p-button>
+          <p-button
+            icon="pi pi-trash"
+            severity="danger"
+            size="small"
+            (click)="confirmDelete(categoria)"
+            pTooltip="Eliminar"
+          ></p-button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="3" class="text-center">No se encontraron categorías</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</app-admin-layout>
+
+<!-- Modal de Creación -->
+<p-dialog
+  header="Nueva Categoría"
+  [(visible)]="showCreateDialog"
+  [modal]="true"
+  [style]="{ width: '450px' }"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="p-fluid">
+    <div class="p-field">
+      <label for="newCategoriaNombre">Nombre de la Categoría:</label>
+      <br />
+      <input
+        id="newCategoriaNombre"
+        type="text"
+        pInputText
+        [(ngModel)]="newCategoria.nombre"
+        placeholder="Ingrese el nombre de la categoría"
+        class="mt-2"
+        [style]="{ width: '60%' }"
+      />
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-content-end gap-2">
+      <p-button
+        icon="pi pi-times"
+        label="Cancelar"
+        severity="secondary"
+        (click)="hideCreateDialog()"
+        [outlined]="true"
+      ></p-button>
+      <p-button
+        icon="pi pi-check"
+        label="Crear"
+        severity="success"
+        (click)="createCategoria()"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Modal de Edición -->
+<p-dialog
+  header="Actualizar Categoría"
+  [(visible)]="showEditDialog"
+  [modal]="true"
+  [style]="{ width: '450px' }"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="p-fluid">
+    <div class="p-field">
+      <label for="categoriaNombre">Nombre de la Categoría:</label>
+      <br />
+      <input
+        id="categoriaNombre"
+        type="text"
+        pInputText
+        [(ngModel)]="selectedCategoria.nombre"
+        placeholder="Ingrese el nombre de la categoría"
+        class="mt-2"
+        [style]="{ width: '60%' }"
+      />
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-content-end gap-2">
+      <p-button
+        icon="pi pi-times"
+        label="Cancelar"
+        severity="secondary"
+        (click)="hideEditDialog()"
+        [outlined]="true"
+      ></p-button>
+      <p-button
+        icon="pi pi-check"
+        label="Guardar"
+        severity="success"
+        (click)="saveCategoria()"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
 
 <!-- Toast Messages -->
 <p-toast></p-toast>
