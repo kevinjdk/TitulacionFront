@@ -81,7 +81,6 @@ export class AdminDashboardComponent implements OnInit {
 
   logout(): void {
     this.showUserMenu = false; // Cerrar el menú antes de logout
-    this.authUseCase.logout();
-    this.router.navigate(['/admin/login']);
+    this.authUseCase.logoutAndRedirect();
   }
 }

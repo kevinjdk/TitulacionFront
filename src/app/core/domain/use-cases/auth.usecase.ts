@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import { AuthGateway } from '../ports/auth.gateway';
 import { User } from '../models/user.model';
 
@@ -7,7 +8,7 @@ import { User } from '../models/user.model';
   providedIn: 'root',
 })
 export class AuthUseCase {
-  constructor(private authGateway: AuthGateway) {}
+  constructor(private authGateway: AuthGateway, private router: Router) {}
 
   login(
     username: string,
@@ -18,6 +19,14 @@ export class AuthUseCase {
 
   logout(): void {
     this.authGateway.logout();
+  }
+
+  logoutAndRedirect(): void {
+    this.authGateway.logout();
+    this.router.navigate(['/admin/auth/login']).then(() => {
+      // Forzar recarga para asegurar que se limpia todo el estado
+      window.location.reload();
+    });
   }
 
   isAuthenticated(): boolean {

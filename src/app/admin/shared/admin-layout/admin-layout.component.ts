@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthUseCase } from '../../../core/domain/use-cases/auth.usecase';
 
 @Component({
   selector: 'app-admin-layout',
@@ -14,7 +15,7 @@ export class AdminLayoutComponent {
   username: string = '';
   showUserMenu: boolean = false;
 
-  constructor(public router: Router) {
+  constructor(public router: Router, private authUseCase: AuthUseCase) {
     this.username = localStorage.getItem('username') || 'Administrador';
   }
 
@@ -24,9 +25,7 @@ export class AdminLayoutComponent {
 
   logout(): void {
     this.showUserMenu = false;
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    this.router.navigate(['/admin/login']);
+    this.authUseCase.logoutAndRedirect();
   }
 
   isActive(route: string): boolean {
