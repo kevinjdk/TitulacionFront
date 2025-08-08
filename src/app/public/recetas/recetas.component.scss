@@ -1,0 +1,976 @@
+.recetas-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+// Page Header
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    font-weight: 300;
+  }
+}
+
+// Filters Section
+.filters-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+
+  h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &::before {
+      content: "";
+      width: 4px;
+      height: 20px;
+      background: linear-gradient(135deg, #e67e22, #d35400);
+      border-radius: 2px;
+    }
+  }
+
+  .filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    align-items: start; // Cambiado de 'end' a 'start' para mantener altura uniforme
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 1.2rem;
+    }
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    min-height: 85px; // Altura mínima fija para mantener uniformidad
+
+    label {
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-height: 20px; // Altura fija para las etiquetas
+      
+      .filter-icon {
+        color: #e67e22;
+        font-size: 0.9rem;
+      }
+    }
+
+    .filter-select {
+      width: 100%;
+      flex: 1; // Ocupa el espacio disponible
+    }
+
+    // Eliminar todos los mensajes de ayuda que distorsionaban el diseño
+    .filter-hint {
+      display: none; // Ocultar completamente los mensajes
+    }
+
+    &.filter-actions {
+      display: flex;
+      flex-direction: row;
+      gap: 0.75rem;
+      margin-top: 0; // Eliminar margen superior
+      justify-content: flex-start;
+      align-items: flex-end; // Alinear botones al final
+      min-height: 85px; // Misma altura que otros grupos
+      
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filtrar-btn {
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        border: none;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          background: linear-gradient(135deg, #219a52 0%, #27ae60 100%);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+      }
+
+      .limpiar-btn {
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          background: #e74c3c;
+          border-color: #e74c3c;
+          color: white;
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+
+  // Ayuda contextual mejorada
+  .filter-help {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f0f7ff;
+    border: 1px solid #3498db;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #2c3e50;
+
+    i {
+      color: #3498db;
+      font-size: 1rem;
+    }
+  }
+}
+
+// Active Filters - Rediseñado
+.active-filters {
+  background: linear-gradient(135deg, #e8f5e8 0%, #f0fdf0 100%);
+  border: 2px solid #27ae60;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(39, 174, 96, 0.1);
+
+  .active-filters-content {
+    .filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+
+      .filter-label {
+        font-weight: 600;
+        color: #27ae60;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        i {
+          font-size: 1.1rem;
+        }
+      }
+
+      .filter-count {
+        background: #27ae60;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        min-width: 24px;
+        text-align: center;
+      }
+    }
+
+    .filter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+
+      .filter-tag {
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-weight: 500;
+        transition: transform 0.2s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+        }
+
+        i {
+          font-size: 0.8rem;
+        }
+
+        &.categoria {
+          background: linear-gradient(135deg, #9b59b6, #8e44ad);
+          color: white;
+        }
+
+        &.region {
+          background: linear-gradient(135deg, #3498db, #2980b9);
+          color: white;
+        }
+
+        &.provincia {
+          background: linear-gradient(135deg, #e67e22, #d35400);
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+// Results Info - Mejorado
+.results-info {
+  margin-bottom: 2rem;
+  text-align: center;
+
+  .results-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: #7f8c8d;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+
+    .results-icon {
+      color: #e67e22;
+      font-size: 1.1rem;
+    }
+
+    strong {
+      color: #2c3e50;
+      font-weight: 600;
+    }
+
+    .pi-spinner {
+      color: #e67e22;
+      margin-right: 0.25rem;
+    }
+  }
+}
+
+// Recetas Grid
+.recetas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Receta Card - Mejorado
+.receta-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  border: 1px solid #e9ecef;
+  position: relative;
+
+  &:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    border-color: #e67e22;
+
+    .image-overlay {
+      opacity: 1;
+    }
+
+    .card-image img {
+      transform: scale(1.08);
+    }
+  }
+
+  .card-image {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    position: relative;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .image-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(231, 126, 34, 0.8), rgba(211, 84, 0, 0.8));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+
+      i {
+        color: white;
+        font-size: 2rem;
+      }
+    }
+  }
+
+  .card-content {
+    padding: 1.75rem;
+
+    .plato-nombre {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-clamp: 2; // Propiedad estándar para compatibilidad
+      overflow: hidden;
+    }
+
+    .plato-info {
+      margin-bottom: 1rem;
+
+      .info-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.6rem;
+        font-size: 0.9rem;
+        color: #7f8c8d;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: #2c3e50;
+        }
+
+        i {
+          margin-right: 0.6rem;
+          color: #e67e22;
+          font-size: 0.85rem;
+          min-width: 18px;
+          transition: transform 0.2s ease;
+        }
+
+        &:hover i {
+          transform: scale(1.1);
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .plato-descripcion {
+      color: #7f8c8d;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.75rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      line-clamp: 3; // Propiedad estándar para compatibilidad
+      overflow: hidden;
+    }
+
+    .hacer-ahora-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+      border: none;
+      padding: 0.85rem 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border-radius: 12px;
+      font-size: 0.9rem;
+
+      &:hover {
+        background: linear-gradient(135deg, #d35400 0%, #c0392b 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(230, 126, 34, 0.4);
+      }
+
+      &:active {
+        transform: translateY(-1px);
+      }
+    }
+  }
+}
+
+// No Results - Mejorado
+.no-results {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #7f8c8d;
+
+  .no-results-content {
+    max-width: 450px;
+    margin: 0 auto;
+    background: #f8f9fa;
+    padding: 3rem 2rem;
+    border-radius: 16px;
+    border: 2px dashed #bdc3c7;
+
+    i {
+      font-size: 4.5rem;
+      color: #bdc3c7;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+
+    h3 {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      color: #2c3e50;
+      font-weight: 600;
+    }
+
+    p {
+      margin-bottom: 2rem;
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+      }
+    }
+  }
+}
+
+// Loading - Mejorado
+.loading-container {
+  text-align: center;
+  padding: 4rem 2rem;
+
+  .loading-content {
+    .loading-icon {
+      font-size: 2.5rem;
+      color: #e67e22;
+      margin-bottom: 1.5rem;
+    }
+
+    p {
+      color: #7f8c8d;
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      font-weight: 500;
+    }
+
+    .loading-bar {
+      width: 200px;
+      height: 4px;
+      background: #ecf0f1;
+      border-radius: 2px;
+      margin: 0 auto;
+      overflow: hidden;
+      position: relative;
+
+      .loading-progress {
+        height: 100%;
+        background: linear-gradient(90deg, #e67e22, #f39c12, #e67e22);
+        border-radius: 2px;
+        animation: loading 2s infinite;
+      }
+    }
+  }
+}
+
+@keyframes loading {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200px);
+  }
+}
+
+// Pagination - Mejorado
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  padding: 2rem 0;
+
+  ::ng-deep .p-paginator {
+    border: none;
+    background: transparent;
+    border-radius: 12px;
+    padding: 1rem;
+
+    .p-paginator-page {
+      margin: 0 0.25rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+
+      &.p-highlight {
+        background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+        border-color: #e67e22;
+        transform: scale(1.1);
+      }
+
+      &:not(.p-highlight):hover {
+        background: #f8f9fa;
+        border-color: #e67e22;
+        color: #e67e22;
+        transform: translateY(-2px);
+      }
+    }
+
+    .p-paginator-prev,
+    .p-paginator-next {
+      border-radius: 8px;
+      transition: all 0.3s ease;
+
+      &:not(.p-disabled):hover {
+        background: #f8f9fa;
+        border-color: #e67e22;
+        color: #e67e22;
+        transform: translateY(-2px);
+      }
+    }
+
+    .p-paginator-current {
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      color: #2c3e50;
+      font-weight: 600;
+    }
+  }
+}
+
+// Toast customization - Mejor posicionamiento y estilo
+::ng-deep .p-toast {
+  z-index: 9999;
+  
+  &.p-toast-top-right {
+    top: 20px;
+    right: 20px;
+  }
+  
+  .p-toast-message {
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    margin-bottom: 1rem;
+    min-width: 300px;
+    max-width: 400px;
+    backdrop-filter: blur(10px);
+    
+    // Animación de entrada mejorada
+    animation: slideInRight 0.3s ease-out;
+    
+    &.p-toast-message-success {
+      background: linear-gradient(135deg, #27ae60, #2ecc71);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      
+      .p-toast-message-icon,
+      .p-toast-icon-close {
+        color: white;
+      }
+    }
+
+    &.p-toast-message-warn {
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      
+      .p-toast-message-icon,
+      .p-toast-icon-close {
+        color: white;
+      }
+    }
+
+    &.p-toast-message-error {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      
+      .p-toast-message-icon,
+      .p-toast-icon-close {
+        color: white;
+      }
+    }
+
+    &.p-toast-message-info {
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      
+      .p-toast-message-icon,
+      .p-toast-icon-close {
+        color: white;
+      }
+    }
+    
+    .p-toast-message-content {
+      padding: 1rem 1.25rem;
+      
+      .p-toast-summary {
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+      }
+      
+      .p-toast-detail {
+        font-size: 0.85rem;
+        opacity: 0.9;
+        line-height: 1.4;
+      }
+    }
+    
+    .p-toast-icon-close {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
+// Animación personalizada para entrada desde la derecha
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .recetas-grid {
+    gap: 1.5rem;
+  }
+
+  .receta-card {
+    .card-content {
+      padding: 1.25rem;
+
+      .plato-nombre {
+        font-size: 1.15rem;
+      }
+
+      .hacer-ahora-btn {
+        padding: 0.75rem;
+        font-size: 0.85rem;
+      }
+    }
+
+    .card-image {
+      height: 180px;
+    }
+  }
+
+  .filters-section {
+    padding: 1.5rem;
+
+    .filters-grid {
+      .filter-group {
+        min-height: auto;
+
+        &.filter-actions {
+          min-height: auto;
+          margin-top: 1rem;
+        }
+      }
+    }
+  }
+
+  .active-filters {
+    .active-filters-content {
+      .filter-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+
+      .filter-tags {
+        gap: 0.5rem;
+
+        .filter-tag {
+          font-size: 0.8rem;
+          padding: 0.4rem 0.8rem;
+        }
+      }
+    }
+  }
+
+  .no-results .no-results-content {
+    padding: 2rem 1.5rem;
+
+    i {
+      font-size: 3.5rem;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+    }
+  }
+}
+
+// Mejoras en MultiSelect para mejor UX
+::ng-deep .p-multiselect {
+  border-radius: 8px;
+  transition: all 0.3s ease;
+
+  &:not(.p-disabled):hover {
+    border-color: #e67e22;
+  }
+
+  &.p-focus {
+    border-color: #e67e22;
+    box-shadow: 0 0 0 0.2rem rgba(230, 126, 34, 0.2);
+  }
+
+  .p-multiselect-label {
+    padding: 0.75rem;
+  }
+
+  &.p-multiselect-clearable .p-multiselect-clear-icon {
+    color: #e74c3c;
+  }
+}
+//Codigo funcional
+// Agregar al final de tu archivo SCSS existente
+
+// Paginación - Estilos completos
+.pagination-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 3rem;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 16px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+
+  .pagination-info-text {
+    margin-bottom: 1.5rem;
+    
+    span {
+      color: #2c3e50;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, #e8f5e8 0%, #f0fdf0 100%);
+      border-radius: 25px;
+      border: 1px solid #27ae60;
+    }
+  }
+
+  ::ng-deep .p-paginator {
+    border: none;
+    background: transparent;
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    .p-paginator-first,
+    .p-paginator-prev,
+    .p-paginator-next,
+    .p-paginator-last {
+      background: white;
+      border: 2px solid #e9ecef;
+      color: #2c3e50;
+      border-radius: 10px;
+      padding: 0.75rem;
+      margin: 0 0.25rem;
+      transition: all 0.3s ease;
+      min-width: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+
+      &:not(.p-disabled):hover {
+        background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+        border-color: #e67e22;
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(230, 126, 34, 0.3);
+      }
+
+      &.p-disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        background: #f8f9fa;
+        color: #adb5bd;
+        
+        &:hover {
+          transform: none;
+          box-shadow: none;
+        }
+      }
+    }
+
+    .p-paginator-page {
+      background: white;
+      border: 2px solid #e9ecef;
+      color: #2c3e50;
+      border-radius: 10px;
+      padding: 0.75rem;
+      margin: 0 0.125rem;
+      transition: all 0.3s ease;
+      min-width: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+
+      &.p-highlight {
+        background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+        border-color: #e67e22;
+        color: white;
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(230, 126, 34, 0.4);
+        z-index: 1;
+      }
+
+      &:not(.p-highlight):hover {
+        background: #f8f9fa;
+        border-color: #e67e22;
+        color: #e67e22;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    .p-paginator-current {
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      border: 2px solid #27ae60;
+      border-radius: 10px;
+      color: #2c3e50;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      margin: 0 1rem;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+  }
+}
+// Responsive móvil
+@media (max-width: 768px) {
+  .pagination-container {
+    padding: 1.5rem 0.5rem;
+    
+    .pagination-info-text span {
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+    }
+
+    ::ng-deep .p-paginator {
+      .p-paginator-first,
+      .p-paginator-prev,
+      .p-paginator-next,
+      .p-paginator-last,
+      .p-paginator-page {
+        min-width: 36px;
+        min-height: 36px;
+        padding: 0.5rem;
+        font-size: 0.85rem;
+      }
+      
+      .p-paginator-current {
+        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+        margin: 0.5rem 0;
+      }
+    }
+  }
+
+  .pagination-footer {
+    padding: 1rem;
+    
+    .pagination-summary {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      
+      .summary-item {
+        font-size: 0.85rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination-container {
+    margin-top: 2rem;
+    padding: 1rem 0.5rem;
+    
+    .pagination-info-text span {
+      font-size: 0.8rem;
+      padding: 0.4rem 0.8rem;
+    }
+  }
+}
+//  <!--codigo listo solo falta diseño-->

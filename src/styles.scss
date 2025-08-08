@@ -1,6 +1,11 @@
-/* PrimeNG 19 - Configuración básica de tema */
+/* ------------------------------
+   Configuración de colores y estilos globales
+   para la aplicación usando PrimeNG 19
+--------------------------------*/
+
+/* Variables globales para el tema claro */
 :root {
-  /* Primary Colors - Blue theme */
+  /* Colores primarios - Azul */
   --p-primary-50: #eff6ff;
   --p-primary-100: #dbeafe;
   --p-primary-200: #bfdbfe;
@@ -13,7 +18,7 @@
   --p-primary-900: #1e3a8a;
   --p-primary-950: #172554;
 
-  /* Surface Colors - Light theme */
+  /* Colores de superficie (fondos) - Tema claro */
   --p-surface-0: #ffffff;
   --p-surface-50: #f8fafc;
   --p-surface-100: #f1f5f9;
@@ -27,25 +32,25 @@
   --p-surface-900: #0f172a;
   --p-surface-950: #020617;
 
-  /* Text Colors */
+  /* Colores de texto */
   --p-text-color: #334155;
   --p-text-color-secondary: #64748b;
   --p-text-color-muted: #94a3b8;
 
-  /* Border */
+  /* Bordes y radios */
   --p-border-color: #e2e8f0;
   --p-border-radius: 6px;
 
-  /* Focus */
+  /* Sombra de enfoque para accesibilidad */
   --p-focus-ring: 0 0 0 0.2rem rgba(59, 130, 246, 0.5);
 
-  /* Component Variables */
+  /* Variables de componentes */
   --p-content-border-radius: 6px;
   --p-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif;
 }
 
-/* Dark mode variables (optional) */
+/* Variables para modo oscuro */
 [data-theme="dark"] {
   --p-surface-0: #0f172a;
   --p-surface-50: #1e293b;
@@ -61,13 +66,14 @@
   --p-surface-950: #ffffff;
 }
 
-/* Global styles */
+/* Estilos globales para todos los elementos */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/* Estilos para html y body */
 html,
 body {
   height: 100%;

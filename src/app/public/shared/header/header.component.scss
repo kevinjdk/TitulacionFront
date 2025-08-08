@@ -1,0 +1,338 @@
+// Importar la fuente Averia Serif Libre
+@import url('https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:wght@300;400;700&display=swap');
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+  // Franja amarilla superior con logo y nombre
+  .header-top {
+    background: #FFD931;
+    padding: 1.2rem 0;
+    
+    @media (max-width: 768px) {
+      padding: 1.5rem 0;
+    }
+    
+    @media (max-width: 480px) {
+      padding: 1.8rem 0;
+    }
+    
+    .header-top-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      position: relative;
+
+      @media (max-width: 768px) {
+        padding: 0 1rem;
+        justify-content: center;
+      }
+
+      .logo-container {
+        display: flex;
+        justify-content: center;
+        flex: 1;
+        
+        @media (max-width: 768px) {
+          flex: none;
+        }
+      }
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+
+      .logo {
+        height: 50px;
+        width: auto;
+
+        @media (max-width: 768px) {
+          height: 40px;
+        }
+      }
+
+      .logo-text {
+        font-family: 'Averia Serif Libre', serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #000000;
+        text-decoration: none;
+
+        @media (max-width: 768px) {
+          font-size: 1.8rem;
+        }
+
+        @media (max-width: 480px) {
+          font-size: 1.5rem;
+        }
+
+        // Hacer que "EC" sea más grande
+        .highlight {
+          font-size: 1.5em;
+          position: relative;
+          top: -1px;
+        }
+      }
+    }
+  }
+
+  // Franja inferior con navegación y buscador
+  .header-bottom {
+    background: #273664;
+    padding: 0.75rem 0;
+
+    .header-bottom-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+
+      @media (max-width: 768px) {
+        padding: 0 1rem;
+        gap: 1rem;
+      }
+    }
+
+    .nav-desktop {
+      display: flex;
+      gap: 2.5rem;
+
+      @media (max-width: 768px) {
+        display: none;
+      }
+
+      .nav-link {
+        color: #ecf0f1;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 1.1rem;
+        padding: 0.5rem 1.2rem;
+        border-radius: 25px;
+        transition: all 0.2s ease;
+        position: relative;
+
+        &:hover {
+          color: #FFD931;
+          transform: translateY(-1px);
+        }
+
+        &.active {
+          color: #FFD931;
+          font-size: 1.2rem;
+        }
+      }
+    }
+
+    // Navegación móvil compacta
+    .nav-mobile {
+      display: none;
+      gap: 1.5rem;
+      align-items: center;
+
+      @media (max-width: 768px) {
+        display: flex;
+      }
+
+      .nav-link-mobile {
+        color: #ecf0f1;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        padding: 0.5rem 0.8rem;
+        border-radius: 20px;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+
+        &:hover {
+          color: #FFD931;
+          transform: translateY(-1px);
+        }
+
+        &.active {
+          color: #FFD931;
+          font-weight: 600;
+        }
+
+        i {
+          font-size: 0.85rem;
+        }
+      }
+    }
+
+    .search-section {
+      flex: 1;
+      max-width: 400px;
+
+      @media (max-width: 768px) {
+        max-width: 280px;
+        flex: 0 1 auto;
+      }
+
+      @media (max-width: 480px) {
+        max-width: 200px;
+      }
+
+      .search-form {
+        display: flex;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 30px;
+        padding: 0.3rem;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+
+        &:focus-within {
+          background: rgba(255, 255, 255, 0.15);
+          border-color: #FFD931;
+          box-shadow: 0 0 0 3px rgba(255, 217, 49, 0.2);
+        }
+
+        .search-input {
+          flex: 1;
+          background: transparent;
+          border: none;
+          color: #ecf0f1;
+          padding: 0.7rem 1.2rem;
+          border-radius: 30px;
+          font-size: 1rem;
+
+          @media (max-width: 768px) {
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+          }
+
+          @media (max-width: 480px) {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.85rem;
+          }
+
+          &::placeholder {
+            color: rgba(236, 240, 241, 0.7);
+            font-style: italic;
+          }
+
+          &:focus {
+            outline: none;
+            box-shadow: none;
+          }
+        }
+
+        .search-button {
+          background: #FFD931;
+          border: none;
+          color: #273664;
+          border-radius: 50%;
+          padding: 0.7rem;
+          transition: all 0.3s ease;
+          font-weight: bold;
+          min-width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          @media (max-width: 768px) {
+            padding: 0.6rem;
+            min-width: 36px;
+            height: 36px;
+          }
+
+          @media (max-width: 480px) {
+            padding: 0.5rem;
+            min-width: 32px;
+            height: 32px;
+          }
+
+          &:hover:not(:disabled) {
+            background: #f1c40f;
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(255, 217, 49, 0.4);
+          }
+
+          &:active {
+            transform: scale(0.95);
+          }
+
+          &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Animaciones
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Responsive adjustments adicionales
+@media (max-width: 480px) {
+  .header {
+    .header-top {
+      .header-top-container {
+        gap: 0.5rem;
+        
+        .logo-container {
+          .logo-section {
+            .logo-text {
+              font-size: 1.4rem;
+            }
+            .logo {
+              height: 35px;
+            }
+          }
+        }
+      }
+    }
+    
+    .header-bottom {
+      .header-bottom-container {
+        gap: 0.5rem;
+      }
+
+      .nav-mobile {
+        gap: 0.8rem;
+        
+        .nav-link-mobile {
+          font-size: 0.85rem;
+          padding: 0.4rem 0.5rem;
+        }
+      }
+    }
+  }
+}
+//  <!--codigo listo solo falta diseño-->

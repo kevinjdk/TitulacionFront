@@ -1,0 +1,236 @@
+<div class="home-container">
+  <!-- Carrusel de Imágenes -->
+  <section class="carousel-section">
+    <p-carousel 
+      [value]="carouselImages" 
+      [numVisible]="1" 
+      [numScroll]="1" 
+      [circular]="true"
+      [autoplayInterval]="5000"
+      [responsiveOptions]="responsiveOptions"
+      [showIndicators]="true"
+      [showNavigators]="true"
+    >
+      <ng-template pTemplate="item" let-image>
+        <div class="carousel-item" (click)="navigateToRecipeFromCarousel(image.recipeId)">
+          <div class="carousel-image-container">
+            <img [src]="image.src" 
+                 [alt]="image.alt" 
+                 class="carousel-image" 
+                 onerror="this.onerror=null; this.src='assets/images/cevicheCamaron.png'">
+          </div>
+        </div>
+      </ng-template>
+    </p-carousel>
+  </section>
+
+  <!-- Información sobre la Gastronomía Ecuatoriana -->
+  <section class="info-section">
+    <div class="info-container">
+      <div class="info-content">
+        <div class="info-text">
+          <h2 class="section-title">Gastronomía Ecuatoriana</h2>
+          <p class="info-paragraph">
+            La gastronomía ecuatoriana es una fusión extraordinaria de sabores ancestrales y técnicas culinarias 
+            que reflejan la diversidad geográfica y cultural del país. Desde los frescos ceviches de la costa 
+            hasta los reconfortantes locros de la sierra, cada plato cuenta la historia de un pueblo rico en 
+            tradiciones y productos únicos.
+          </p>
+          <p class="info-paragraph">
+            Ecuador, siendo un país megadiverso, ofrece ingredientes únicos que van desde los mariscos del 
+            Pacífico hasta los productos amazónicos, pasando por los granos andinos. Esta riqueza natural 
+            se traduce en una cocina que ha conquistado paladares nacionales e internacionales.
+          </p>
+        </div>
+        <div class="info-image">
+          <img src="assets/images/parrafos/parrafo1.png" 
+               alt="Gastronomía Ecuatoriana"
+               onerror="this.onerror=null; this.style.display='none'">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Descubre Recetas Por -->
+  <section class="discover-section">
+    <div class="section-header">
+      <h2 class="section-title">Descubre recetas por</h2>
+      <p class="section-subtitle">Explora nuestra colección de recetas tradicionales ecuatorianas</p>
+    </div>
+    
+    <div class="discover-grid">
+      <div *ngFor="let card of discoverCards" 
+           class="discover-card" 
+           (click)="navigateToRecetas()">
+        <div class="card-image" 
+             [style.background-image]="'url(' + card.backgroundImage + ')'">
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">{{ card.title }}</h3>
+          <p class="card-description">{{ card.description }}</p>
+          <button pButton 
+                  class="p-button-text" 
+                  label="Explorar" 
+                  icon="pi pi-arrow-right">
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- Recetas Destacadas -->
+  <section class="featured-section">
+    <div class="section-header">
+      <h2 class="section-title">Recetas Destacadas</h2>
+      <p class="section-subtitle">Las recetas más populares y reconocidas a nivel nacional e internacional</p>
+    </div>
+
+    <div class="featured-content" *ngIf="!isLoading">
+      <!-- Layout específico: 1 carta grande + 2 cartas pequeñas -->
+      <div class="featured-layout" *ngIf="platosDestacados.length > 0">
+        
+        <!-- Carta Principal (Grande) -->
+        <div class="main-featured-card" *ngIf="platosDestacados[0]">
+          <div class="card-content-wrapper">
+            <div class="card-info-section">
+              <div class="card-badge">
+                <p-tag [value]="platosDestacados[0].categoria.nombre" 
+                       [severity]="getSeverity(platosDestacados[0].categoria.nombre)">
+                </p-tag>
+              </div>
+              <h3 class="card-title">{{ platosDestacados[0].nombre }}</h3>
+              <p class="card-description">{{ platosDestacados[0].descripcion | slice:0:150 }}...</p>
+              
+              <div class="card-details">
+                <div class="detail-item">
+                  <i class="fa-solid fa-cheese"></i>
+                  <span>{{ platosDestacados[0].porciones }} porciones</span>
+                </div>
+                <div class="detail-item">
+                  <i class="fa-solid fa-location-dot"></i>
+                  <span>{{ platosDestacados[0].provincia.nombre }}</span>
+                </div>
+              </div>
+              
+              <button pButton 
+                      class="p-button-primary featured-btn" 
+                      label="Hazlo Ahora" 
+                      (click)="viewRecipe(platosDestacados[0].id)">
+              </button>
+            </div>
+            
+            <div class="card-image-section">
+              <img [src]="platosDestacados[0].imageUrl || 'assets/images/carousel/Encebollado.jpg'" 
+                   [alt]="platosDestacados[0].nombre" 
+                   class="featured-image"
+                   onerror="this.onerror=null; this.src='assets/images/historia.jpg'">
+            </div>
+          </div>
+        </div>
+
+        <!-- Cartas Secundarias (Pequeñas) -->
+        <div class="secondary-cards-container">
+          <div class="secondary-featured-card" 
+               *ngFor="let plato of platosDestacados.slice(1, 3); let i = index">
+            <div class="card-content-wrapper" [class.reverse-layout]="i % 2 === 0">
+              
+              <div class="card-image-section">
+                <img [src]="plato.imageUrl || 'assets/images/carousel/cevichec.jpg'" 
+                     [alt]="plato.nombre" 
+                     class="featured-image"
+                     onerror="this.onerror=null; this.src='assets/images/historia.jpg'">
+              </div>
+              
+              <div class="card-info-section">
+                <div class="card-badge">
+                  <p-tag [value]="plato.categoria.nombre" 
+                         [severity]="getSeverity(plato.categoria.nombre)">
+                  </p-tag>
+                </div>
+                <h4 class="card-title">{{ plato.nombre }}</h4>
+                <p class="card-description">{{ plato.descripcion | slice:0:80 }}...</p>
+                
+                <div class="card-details">
+                  <div class="detail-item">
+                    <i class="fa-solid fa-cheese"></i>
+                    <span>{{ plato.porciones }} porciones</span>
+                  </div>
+                  <div class="detail-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>{{ plato.provincia.nombre }}</span>
+                  </div>
+                </div>
+                
+                <button pButton 
+                        class="p-button-outlined featured-btn-small" 
+                        label="Hazlo Ahora" 
+                        (click)="viewRecipe(plato.id)">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado vacío -->
+      <div *ngIf="platosDestacados.length === 0" class="empty-state">
+        <i class="pi pi-info-circle"></i>
+        <h3>No hay recetas destacadas disponibles</h3>
+        <p>¡Pronto tendremos deliciosas recetas para ti!</p>
+        <button pButton 
+                label="Ver Todas las Recetas" 
+                icon="pi pi-arrow-right"
+                (click)="navigateToRecetas()">
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading state -->
+    <div class="loading-state" *ngIf="isLoading">
+      <div class="loading-layout">
+        <!-- Loading para carta principal -->
+        <div class="main-loading-card">
+          <div class="loading-content-wrapper">
+            <div class="loading-info-section">
+              <p-skeleton width="80px" height="20px" class="mb-3"></p-skeleton>
+              <p-skeleton width="90%" height="2rem" class="mb-2"></p-skeleton>
+              <p-skeleton width="100%" height="1rem" class="mb-1"></p-skeleton>
+              <p-skeleton width="100%" height="1rem" class="mb-1"></p-skeleton>
+              <p-skeleton width="70%" height="1rem" class="mb-3"></p-skeleton>
+              <div class="flex gap-4 mb-3">
+                <p-skeleton width="100px" height="1rem"></p-skeleton>
+                <p-skeleton width="120px" height="1rem"></p-skeleton>
+              </div>
+              <p-skeleton width="120px" height="2.5rem"></p-skeleton>
+            </div>
+            <div class="loading-image-section">
+              <p-skeleton width="100%" height="300px"></p-skeleton>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Loading para cartas secundarias -->
+        <div class="secondary-loading-container">
+          <div *ngFor="let item of [1,2]" class="secondary-loading-card">
+            <div class="loading-content-wrapper">
+              <div class="loading-image-section">
+                <p-skeleton width="100%" height="180px"></p-skeleton>
+              </div>
+              <div class="loading-info-section">
+                <p-skeleton width="60px" height="16px" class="mb-2"></p-skeleton>
+                <p-skeleton width="85%" height="1.2rem" class="mb-2"></p-skeleton>
+                <p-skeleton width="100%" height="0.9rem" class="mb-1"></p-skeleton>
+                <p-skeleton width="80%" height="0.9rem" class="mb-2"></p-skeleton>
+                <div class="flex gap-3 mb-2">
+                  <p-skeleton width="80px" height="0.8rem"></p-skeleton>
+                  <p-skeleton width="90px" height="0.8rem"></p-skeleton>
+                </div>
+                <p-skeleton width="100px" height="2rem"></p-skeleton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
