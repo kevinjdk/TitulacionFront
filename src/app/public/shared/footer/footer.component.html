@@ -1,0 +1,50 @@
+<footer class="footer">
+  <div class="footer-container">
+    <!-- Logo y Redes Sociales -->
+    <div class="footer-section logo-section">
+      <div class="logo-container">
+        <img src="assets/images/logo.png" alt="ReECetas" class="footer-logo">
+      </div>
+      <div class="social-links">
+        <a 
+          *ngFor="let social of socialLinks"
+          [href]="social.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social-link"
+          [title]="social.name"
+        >
+          <i [class]="social.icon"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Información de los Creadores -->
+    <div class="footer-section">
+      <h4 class="section-title">Desarrollado por:</h4>
+      <div class="creators-info">
+        <div *ngFor="let creator of creators" class="creator">
+          <p class="creator-name">{{ creator.name }}</p>
+          <p class="creator-role">{{ creator.role }}</p>
+          <div class="creator-links">
+            <a [href]="creator.github" target="_blank" rel="noopener noreferrer" title="GitHub">
+              <i class="pi pi-github"></i>
+            </a>
+            <a [href]="creator.linkedin" target="_blank" rel="noopener noreferrer" title="LinkedIn">
+              <i class="pi pi-linkedin"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Copyright -->
+  <div class="footer-bottom">
+    <div class="footer-container">
+      <p class="copyright">
+        © {{ currentYear }} ReECetas - Instituto Superior Tecnológico. Todos los derechos reservados.
+      </p>
+    </div>
+  </div>
+</footer>

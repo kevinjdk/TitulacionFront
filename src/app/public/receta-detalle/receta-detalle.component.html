@@ -1,0 +1,133 @@
+<div class="receta-detalle-container">
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="loading">
+    <div class="loading-content">
+      <i class="pi pi-spin pi-spinner loading-icon"></i>
+      <p>Cargando receta...</p>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-container" *ngIf="error && !loading">
+    <div class="error-content">
+      <i class="pi pi-exclamation-triangle error-icon"></i>
+      <h3>Receta no encontrada</h3>
+      <p>La receta que buscas no existe o ha sido eliminada.</p>
+      <button 
+        type="button" 
+        pButton 
+        label="Ver todas las recetas" 
+        icon="pi pi-arrow-left"
+        class="p-button-outlined"
+        (click)="goToRecetas()">
+      </button>
+    </div>
+  </div>
+
+  <!-- Receta Content -->
+  <div class="receta-content" *ngIf="plato && !loading && !error">
+    <!-- Navigation Bar -->
+    <div class="navigation-bar">
+      <button 
+        type="button" 
+        pButton 
+        label="Volver" 
+        icon="pi pi-arrow-left"
+        class="p-button-text p-button-plain back-btn"
+        (click)="goBack()">
+      </button>
+    </div>
+
+    <!-- Header Section - Nueva estructura -->
+    <div class="receta-header">
+      <!-- Imagen -->
+      <div class="header-image">
+        <img 
+          [src]="getImageUrl()" 
+          [alt]="plato.nombre"
+          onerror="this.src='assets/images/placeholders/plato-placeholder.jpg'">
+      </div>
+      
+      <!-- Información básica al lado derecho -->
+      <div class="header-info">
+        <h1 class="receta-titulo">{{ plato.nombre }}</h1>
+        
+        <div class="basic-info">
+          <div class="descripcion-preview">
+            <p>{{ plato.descripcion }}</p>
+          </div>
+          <div class="info-item porciones">
+            <i class="fa-solid fa-cheese"></i>
+            <span>Porciones: {{ plato.porciones }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información de ubicación y categoría - Debajo de imagen e info -->
+    <div class="location-category-info">
+      <div class="meta-item">
+        <i class="fa-solid fa-globe"></i>
+        <span>{{ plato.region.nombre }}</span>
+      </div>
+      
+      <div class="meta-item">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>{{ plato.provincia.nombre }}</span>
+      </div>
+      
+      <div class="meta-item">
+        <i class="fa-solid fa-bowl-food"></i>
+        <span>{{ plato.categoria.nombre }}</span>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="content-grid">
+      <!-- Ingredientes Section -->
+      <div class="receta-section ingredientes-section">
+        <h2>
+          <i class="fa-solid fa-utensils"></i>
+          Ingredientes
+        </h2>
+        <ul class="ingredientes-list">
+          <li 
+            *ngFor="let ingrediente of ingredientesList" 
+            class="ingrediente-item">
+            <span class="ingrediente-text">{{ ingrediente }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Preparación Section -->
+      <div class="receta-section preparacion-section">
+        <h2>
+          <i class="fa-solid fa-shoe-prints"></i>
+          Preparación
+        </h2>
+        <ol class="preparacion-list">
+          <li 
+            *ngFor="let paso of plato.preparacion; let i = index" 
+            class="preparacion-item">
+            <div class="paso-numero">{{ i + 1 }}</div>
+            <div class="paso-content">
+              <p>{{ paso }}</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button 
+        type="button" 
+        pButton 
+        label="Ver más recetas" 
+        icon="pi pi-search"
+        class="p-button-outlined"
+        (click)="goToRecetas()">
+      </button>
+    </div>
+  </div>
+</div>

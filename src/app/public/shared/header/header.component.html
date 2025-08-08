@@ -1,0 +1,82 @@
+<header class="header">
+  <!-- Franja superior amarilla con logo y nombre -->
+  <div class="header-top">
+    <div class="header-top-container">
+      <!-- Logo section centrado -->
+      <div class="logo-container">
+        <a routerLink="/inicio" class="logo-section">
+          <img src="assets/images/logo.png" alt="ReECetas" class="logo">
+          <span class="logo-text">Re<span class="highlight">EC</span>tas</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Franja inferior con navegación principal y buscador -->
+  <div class="header-bottom">
+    <div class="header-bottom-container">
+      <!-- Navigation Desktop -->
+      <nav class="nav-desktop">
+        <a routerLink="/inicio" 
+           routerLinkActive="active" 
+           [routerLinkActiveOptions]="{exact: true}"
+           class="nav-link">
+          Inicio
+        </a>
+        <a routerLink="/recetas" 
+           routerLinkActive="active" 
+           class="nav-link">
+          Recetas
+        </a>
+        <a routerLink="/nosotros" 
+           routerLinkActive="active" 
+           class="nav-link">
+          Nosotros
+        </a>
+      </nav>
+
+      <!-- Navigation Mobile - Todas las opciones -->
+      <nav class="nav-mobile">
+        <a routerLink="/inicio" 
+           class="nav-link-mobile"
+           [class.active]="isActiveRoute('/inicio')"
+           (click)="navigateTo('/inicio')">
+          Inicio
+        </a>
+        <a routerLink="/recetas" 
+           class="nav-link-mobile"
+           [class.active]="isActiveRoute('/recetas')"
+           (click)="navigateTo('/recetas')">
+          Recetas
+        </a>
+        <a routerLink="/nosotros" 
+           class="nav-link-mobile"
+           [class.active]="isActiveRoute('/nosotros')"
+           (click)="navigateTo('/nosotros')">
+          Nosotros
+        </a>
+      </nav>
+
+      <!-- Search Bar - Único buscador para todas las pantallas -->
+      <div class="search-section">
+        <form (ngSubmit)="onSearchSubmit()" class="search-form">
+          <input 
+            type="text"
+            pInputText
+            [formControl]="searchControl"
+            placeholder="Buscar recetas..."
+            class="search-input"
+          >
+          <button 
+            type="submit"
+            pButton
+            icon="pi pi-search"
+            class="search-button"
+            [disabled]="!searchControl.value?.trim()"
+          ></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+  <!--codigo listo solo falta diseño-->

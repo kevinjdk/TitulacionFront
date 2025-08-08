@@ -1,0 +1,267 @@
+<div class="recetas-container">
+  <!-- Toast para notificaciones - Posición esquina superior derecha -->
+  <p-toast position="top-right" [style]="{marginTop: '20px', marginRight: '20px'}"></p-toast>
+
+  <!-- Título de la página -->
+  <div class="page-header">
+    <h1>Recetas Ecuatorianas</h1>
+    <p>Descubre la rica gastronomía del Ecuador</p>
+  </div>
+
+  <!-- Sección de filtros -->
+  <div class="filters-section">
+    <div class="filters-container">
+      <h3>Filtrar recetas</h3>
+      
+      <div class="filters-grid">
+        <!-- Filtro por Región -->
+        <div class="filter-group">
+          <label for="region-filter">
+            <i class="fa-solid fa-globe"></i>
+            Región
+          </label>
+          <p-multiSelect
+            id="region-filter"
+            [options]="regiones"
+            [(ngModel)]="selectedRegiones"
+            optionLabel="nombre"
+            placeholder="Selecciona regiones"
+            (onChange)="onRegionChange()"
+            [showClear]="true"
+            class="filter-select">
+          </p-multiSelect>
+        </div>
+
+        <!-- Filtro por Provincia -->
+        <div class="filter-group">
+          <label for="provincia-filter">
+            <i class="fa-solid fa-location-dot"></i>
+            Provincia
+          </label>
+          <p-multiSelect
+            id="provincia-filter"
+            [options]="provinciasFiltradas"
+            [(ngModel)]="selectedProvincias"
+            optionLabel="nombre"
+            [placeholder]="getProvinciaPlaceholder()"
+            (onChange)="onProvinciaChange()"
+            [showClear]="true"
+            [disabled]="selectedRegiones && selectedRegiones.length > 0 && provinciasFiltradas.length === 0"
+            class="filter-select"
+            [emptyMessage]="'No hay provincias disponibles'">
+          </p-multiSelect>
+        </div>
+
+        <!-- Filtro por Categoría -->
+        <div class="filter-group">
+          <label for="categoria-filter">
+            <i class="fa-solid fa-bowl-food"></i>
+            Categoría
+          </label>
+          <p-multiSelect
+            id="categoria-filter"
+            [options]="categorias"
+            [(ngModel)]="selectedCategorias"
+            optionLabel="nombre"
+            placeholder="Selecciona categorías"
+            (onChange)="onCategoriaChange()"
+            [showClear]="true"
+            class="filter-select">
+          </p-multiSelect>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="filter-group filter-actions">
+          <button 
+            type="button" 
+            pButton 
+            label="Filtrar" 
+            icon="pi pi-search"
+            class="p-button filtrar-btn"
+            (click)="applyFilters()">
+          </button>
+          
+          <button 
+            type="button" 
+            pButton 
+            label="Limpiar" 
+            icon="pi pi-times"
+            class="p-button-outlined p-button-secondary limpiar-btn"
+            (click)="clearFilters()">
+          </button>
+        </div>
+      </div>
+      
+      <!-- Ayuda contextual -->
+      <div class="filter-help" *ngIf="!hasActiveFilters">
+        <i class="pi pi-info-circle"></i>
+        <span>Selecciona uno o más filtros para encontrar recetas específicas</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indicador de filtros activos -->
+  <div class="active-filters" *ngIf="hasActiveFilters">
+    <div class="active-filters-content">
+      <div class="filter-header">
+        <span class="filter-label">
+          <i class="pi pi-filter"></i>
+          Filtros activos
+        </span>
+        <span class="filter-count">{{ 
+          (selectedCategorias.length || 0) + 
+          (selectedRegiones.length || 0) + 
+          (selectedProvincias.length || 0) 
+        }}</span>
+      </div>
+      
+      <div class="filter-tags">
+        <span class="filter-tag categoria" *ngFor="let categoria of selectedCategorias">
+          <i class="fa-solid fa-bowl-food"></i>
+          {{ categoria.nombre }}
+        </span>
+        
+        <span class="filter-tag region" *ngFor="let region of selectedRegiones">
+          <i class="fa-solid fa-globe"></i>
+          {{ region.nombre }}
+        </span>
+        
+        <span class="filter-tag provincia" *ngFor="let provincia of selectedProvincias">
+          <i class="fa-solid fa-location-dot"></i>
+          {{ provincia.nombre }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indicador de resultados y paginación info -->
+  <div class="results-info">
+    <div class="results-content">
+      <span *ngIf="!loading && hasActiveFilters">
+        <strong>{{ totalItems }}</strong> recetas encontradas con los filtros aplicados
+        <span *ngIf="totalItems > itemsPerPage" class="pagination-info">
+          (mostrando {{ startIndex }} - {{ endIndex }})
+        </span>
+      </span>
+      <span *ngIf="!loading && !hasActiveFilters">
+        Mostrando <strong>{{ startIndex }} - {{ endIndex }}</strong> de <strong>{{ totalItems }}</strong> recetas disponibles
+      </span>
+      <span *ngIf="loading">
+        <i class="pi pi-spin pi-spinner"></i>
+        Buscando recetas...
+      </span>
+    </div>
+  </div>
+
+  <!-- Grilla de recetas -->
+  <div class="recetas-grid" *ngIf="!loading">
+    <div 
+      class="receta-card" 
+      *ngFor="let plato of pagedPlatos; trackBy: trackByPlatoId"
+      (click)="goToRecetaDetalle(plato)">
+      
+      <div class="card-image">
+        <img 
+          [src]="getImageUrl(plato)" 
+          [alt]="plato.nombre"
+          onerror="this.src='assets/images/placeholders/plato-placeholder.jpg'">
+        <div class="image-overlay">
+          <i class="pi pi-eye"></i>
+        </div>
+      </div>
+      
+      <div class="card-content">
+        <h3 class="plato-nombre">{{ plato.nombre }}</h3>
+        
+        <div class="plato-info">
+          <div class="info-item">
+            <i class="fa-solid fa-globe"></i>
+            <span>{{ plato.region.nombre }}</span>
+          </div>
+          
+          <div class="info-item" *ngIf="plato.provincia">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>{{ plato.provincia.nombre }}</span>
+          </div>
+          
+          <div class="info-item">
+            <i class="fa-solid fa-bowl-food"></i>
+            <span>{{ plato.categoria.nombre }}</span>
+          </div>
+          
+          <div class="info-item">
+            <i class="fa-solid fa-cheese"></i>
+            <span>{{ plato.porciones }} porciones</span>
+          </div>
+        </div>
+        
+        <p class="plato-descripcion">{{ plato.descripcion }}</p>
+        
+        <button 
+          type="button" 
+          pButton 
+          label="Ver Receta" 
+          class="p-button p-button-rounded hacer-ahora-btn">
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje cuando no hay resultados -->
+  <div class="no-results" *ngIf="!loading && totalItems === 0">
+    <div class="no-results-content">
+      <i class="pi pi-search-minus"></i>
+      <h3>No se encontraron recetas</h3>
+      <p *ngIf="hasActiveFilters">
+        No hay recetas que coincidan con los filtros seleccionados.<br>
+        Intenta ajustar o limpiar los filtros para ver más resultados.
+      </p>
+      <p *ngIf="!hasActiveFilters">
+        No hay recetas disponibles en este momento.
+      </p>
+      <button 
+        type="button" 
+        pButton 
+        label="Limpiar Filtros" 
+        icon="pi pi-times"
+        class="p-button-outlined"
+        *ngIf="hasActiveFilters"
+        (click)="clearFilters()">
+      </button>
+    </div>
+  </div>
+
+  <!-- Indicador de carga -->
+  <div class="loading-container" *ngIf="loading">
+    <div class="loading-content">
+      <i class="pi pi-spin pi-spinner loading-icon"></i>
+      <p>Buscando recetas deliciosas...</p>
+      <div class="loading-bar">
+        <div class="loading-progress"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paginación - Ahora siempre visible cuando hay más de itemsPerPage elementos -->
+  <div class="pagination-container" *ngIf="!loading && totalItems > itemsPerPage">
+    <div class="pagination-info-text">
+      <span>
+        Página {{ currentPage + 1 }} de {{ totalPages }} 
+        ({{ totalItems }} recetas en total)
+      </span>
+    </div>
+    
+    <p-paginator
+      [rows]="itemsPerPage"
+      [totalRecords]="totalItems"
+      [first]="currentPage * itemsPerPage"
+      (onPageChange)="onPageChange($event)"
+      [pageLinkSize]="5"
+      [showCurrentPageReport]="true"
+      [showFirstLastIcon]="true"
+      [showPageLinks]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} recetas">
+    </p-paginator>
+  </div>
+</div>
+  <!--codigo listo solo falta diseño-->
