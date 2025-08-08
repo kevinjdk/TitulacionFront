@@ -100,6 +100,7 @@
 
 .form-actions {
   margin-top: 10px;
+  width: 100%;
 }
 
 .register-btn {
@@ -174,6 +175,33 @@
 ::ng-deep .p-password .p-password-panel {
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* PrimeNG Button overrides */
+::ng-deep .register-btn {
+  width: 100% !important;
+}
+
+::ng-deep .register-btn .p-button {
+  width: 100% !important;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+::ng-deep .register-btn .p-button:hover:not(:disabled) {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+}
+
+::ng-deep .register-btn .p-button:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
 }
 
 /* Responsive */
