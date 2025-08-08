@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 // Contenedor principal
 .home-container {
   max-width: 1200px;
@@ -293,7 +295,7 @@
               &:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 8px 25px rgba(232, 33, 2, 0.3);
-                background-color: adjust-color(#E82102, $lightness: -10%) !important;
+                background-color: color.adjust(#E82102, $lightness: -10%) !important;
               }
               
               &:focus {
@@ -426,7 +428,7 @@
                 &:hover {
                   transform: translateY(-1px);
                   box-shadow: 0 4px 15px rgba(232, 33, 2, 0.3);
-                  background-color: adjust-color(#E82102, $lightness: -10%) !important;
+                  background-color: color.adjust(#E82102, $lightness: -10%) !important;
                 }
                 
                 &:focus {
