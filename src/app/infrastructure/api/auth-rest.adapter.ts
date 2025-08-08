@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { AuthGateway } from '../../core/domain/ports/auth.gateway';
 import { User } from '../../core/domain/models/user.model';
+import { RegisterRequest } from '../../core/domain/models/register-request.model';
 import { environment } from '../../../enviroments/environment';
 
 interface JwtResponseDTO {
@@ -59,5 +60,9 @@ export class AuthRestAdapter implements AuthGateway {
 
   getUsername(): string | null {
     return localStorage.getItem('username');
+  }
+
+  register(registerRequest: RegisterRequest): Observable<any> {
+    return this.http.post(this.apiUrl + 'signup', registerRequest);
   }
 }

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AdminRoutingModule } from './admin-routing.module';
-import { LoginComponent } from './auth/login/login.component';
 import { AdminDashboardComponent } from './dashboard/admin-dashboard.component';
 
 // PrimeNG Modules
@@ -25,14 +24,12 @@ import { PanelModule } from 'primeng/panel';
 
 // Components
 import { AdminLayoutComponent } from './shared/admin-layout/admin-layout.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
 import { CategoriaListComponent } from './categorias/categoria-list/categoria-list.component';
-import { CategoriaFormComponent } from './categorias/categoria-form/categoria-form.component';
 import { RegionListComponent } from './regiones/region-list/region-list.component';
-import { RegionFormComponent } from './regiones/region-form/region-form.component';
 import { ProvinciaListComponent } from './provincias/provincia-list/provincia-list.component';
-import { ProvinciaFormComponent } from './provincias/provincia-form/provincia-form.component';
 import { PlatoListComponent } from './platos/plato-list/plato-list.component';
-import { PlatoFormComponent } from './platos/plato-form/plato-form.component';
 
 // Gateways and Services
 import { CategoriaGateway } from '../core/domain/ports/categoria.gateway';
@@ -66,17 +63,14 @@ import { ConfirmationService } from 'primeng/api';
 
 @NgModule({
   declarations: [
-    LoginComponent,
     AdminDashboardComponent,
     AdminLayoutComponent,
+    LoginComponent,
+    RegisterComponent,
     CategoriaListComponent,
-    CategoriaFormComponent,
     RegionListComponent,
-    RegionFormComponent,
     ProvinciaListComponent,
-    ProvinciaFormComponent,
     PlatoListComponent,
-    PlatoFormComponent,
   ],
   imports: [
     CommonModule,

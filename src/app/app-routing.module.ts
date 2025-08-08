@@ -2,13 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/recetas', pathMatch: 'full' },
+  { path: '', redirectTo: '/admin/auth/login', pathMatch: 'full' },
   {
     path: 'admin',
     loadChildren: () =>
       import('./admin/admin.module').then((m) => m.AdminModule),
   },
-  { path: '**', redirectTo: '/recetas' },
+  { path: '**', redirectTo: '/admin/auth/login' },
 ];
 
 @NgModule({

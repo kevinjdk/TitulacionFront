@@ -1,59 +1,71 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AuthUseCase } from '../../../core/domain/use-cases/auth.usecase';
+import { MessageService } from 'primeng/api';
+import { AuthRestAdapter } from '../../../infrastructure/api/auth-rest.adapter';
 
 @Component({
   selector: 'app-login',
   standalone: false,
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  styleUrl: './login.component.scss',
 })
-export class LoginComponent implements OnInit {
-  loginForm!: FormGroup;
-  loading = false;
-  errorMessage: string | null = null;
+export class LoginComponent {
+  loginData = {
+    username: '',
+    password: '',
+  };
+  loading: boolean = false;
 
-  constructor(private authUseCase: AuthUseCase, private router: Router) {}
+  constructor(
+    private router: Router,
+    private messageService: MessageService,
+    private authService: AuthRestAdapter
+  ) {}
 
-  ngOnInit(): void {
-    this.loginForm = new FormGroup({
-      username: new FormControl('', Validators.required), // <-- Cambiado a 'username', sin Validators.email
-      password: new FormControl('', Validators.required),
-    });
-  }
-
-  onLogin(): void {
-    this.loading = true;
-    this.errorMessage = null;
-
-    if (this.loginForm.invalid) {
-      this.errorMessage = 'Por favor, ingresa tu usuario y contraseña.'; // Mensaje ajustado
-      this.loading = false;
-      this.loginForm.markAllAsTouched();
+  login() {
+    // Validaciones básicas
+    if (!this.loginData.username || !this.loginData.password) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Advertencia',
+        detail: 'Todos los campos son obligatorios',
+      });
       return;
     }
 
-    const username = this.loginForm.get('username')?.value; // <-- Obtiene el valor del campo 'username'
-    const password = this.loginForm.get('password')?.value;
+    this.loading = true;
 
-    this.authUseCase.login(username, password).subscribe({
-      // <-- Pasa 'username' al caso de uso
-      next: (response) => {
-        console.log('Login exitoso:', response);
-        this.loading = false;
-        this.router.navigate(['/admin/dashboard']);
-      },
-      error: (err) => {
-        console.error('Error de login:', err);
-        this.loading = false;
-        if (err.status === 401) {
-          this.errorMessage = 'Credenciales incorrectas. Intenta de nuevo.';
-        } else {
-          this.errorMessage =
-            'Ocurrió un error al iniciar sesión. Intenta más tarde.';
-        }
-      },
-    });
+    // Autenticación real
+    this.authService
+      .login(this.loginData.username, this.loginData.password)
+      .subscribe({
+        next: (response) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: 'Inicio de sesión exitoso',
+          });
+
+          // Redirigir al dashboard
+          this.router.navigate(['/admin/dashboard']);
+          this.loading = false;
+        },
+        error: (error) => {
+          const errorMessage =
+            error.error?.message ||
+            error.error?.error ||
+            'Error al iniciar sesión';
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: errorMessage,
+          });
+          this.loading = false;
+        },
+      });
+  }
+
+  navigateToRegister() {
+    this.router.navigate(['/admin/auth/register']);
   }
 }
